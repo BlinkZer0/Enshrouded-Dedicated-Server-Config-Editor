@@ -1,94 +1,16 @@
-# ⚔️ Enshrouded Dedicated Server Config Editor
+<p align="center">
+  <img src="https://img.shields.io/badge/⚔️_ENSHROUDED-Server_Config_Editor-d4af37?style=for-the-badge&labelColor=2a211a" alt="Enshrouded Server Config Editor">
+</p>
 
-<div align="center">
+<h1 align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Georgia&size=35&duration=3000&pause=1000&color=D4AF37&center=true&vCenter=true&width=600&lines=⚔️+Enshrouded+Server+Editor+⚔️;Web-Based+JSON+Config+Tool;No+Manual+Editing+Required" alt="Typing SVG" />
+</h1>
 
-```svg
-<svg width="800" height="200" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#d4af37;stop-opacity:1">
-        <animate attributeName="stop-color" values="#d4af37;#e67e22;#d4af37" dur="3s" repeatCount="indefinite"/>
-      </stop>
-      <stop offset="100%" style="stop-color:#e67e22;stop-opacity:1">
-        <animate attributeName="stop-color" values="#e67e22;#d4af37;#e67e22" dur="3s" repeatCount="indefinite"/>
-      </stop>
-    </linearGradient>
-
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-
-    <linearGradient id="flameGradient" x1="0%" y1="100%" x2="0%" y2="0%">
-      <stop offset="0%" style="stop-color:#e67e22;stop-opacity:1"/>
-      <stop offset="50%" style="stop-color:#e74c3c;stop-opacity:0.8"/>
-      <stop offset="100%" style="stop-color:#f39c12;stop-opacity:0.3"/>
-    </linearGradient>
-  </defs>
-
-  <!-- Castle Silhouette -->
-  <rect x="50" y="120" width="80" height="70" fill="#2a211a" opacity="0.8"/>
-  <rect x="45" y="110" width="15" height="25" fill="#2a211a" opacity="0.8"/>
-  <rect x="120" y="110" width="15" height="25" fill="#2a211a" opacity="0.8"/>
-  <polygon points="55,110 70,95 85,110" fill="#2a211a" opacity="0.8"/>
-  <polygon points="100,110 115,95 130,110" fill="#2a211a" opacity="0.8"/>
-
-  <rect x="670" y="120" width="80" height="70" fill="#2a211a" opacity="0.8"/>
-  <rect x="665" y="110" width="15" height="25" fill="#2a211a" opacity="0.8"/>
-  <rect x="740" y="110" width="15" height="25" fill="#2a211a" opacity="0.8"/>
-  <polygon points="675,110 690,95 705,110" fill="#2a211a" opacity="0.8"/>
-  <polygon points="720,110 735,95 750,110" fill="#2a211a" opacity="0.8"/>
-
-  <!-- Animated Torches -->
-  <rect x="160" y="140" width="8" height="40" fill="#5a4a38"/>
-  <ellipse cx="164" cy="135" rx="10" ry="15" fill="url(#flameGradient)">
-    <animate attributeName="ry" values="15;18;12;15" dur="1s" repeatCount="indefinite"/>
-    <animate attributeName="opacity" values="0.8;1;0.7;0.8" dur="1s" repeatCount="indefinite"/>
-  </ellipse>
-
-  <rect x="632" y="140" width="8" height="40" fill="#5a4a38"/>
-  <ellipse cx="636" cy="135" rx="10" ry="15" fill="url(#flameGradient)">
-    <animate attributeName="ry" values="15;12;18;15" dur="1s" repeatCount="indefinite"/>
-    <animate attributeName="opacity" values="0.8;0.7;1;0.8" dur="1s" repeatCount="indefinite"/>
-  </ellipse>
-
-  <!-- Crossed Swords -->
-  <g transform="translate(200, 100)">
-    <rect x="-3" y="0" width="6" height="60" fill="url(#goldGradient)" filter="url(#glow)" transform="rotate(-20 0 30)"/>
-    <polygon points="0,-10 -8,0 8,0" fill="url(#goldGradient)" filter="url(#glow)" transform="rotate(-20 0 30)"/>
-    <circle cx="0" cy="55" r="8" fill="url(#goldGradient)" filter="url(#glow)" transform="rotate(-20 0 30)"/>
-  </g>
-
-  <g transform="translate(600, 100)">
-    <rect x="-3" y="0" width="6" height="60" fill="url(#goldGradient)" filter="url(#glow)" transform="rotate(20 0 30)"/>
-    <polygon points="0,-10 -8,0 8,0" fill="url(#goldGradient)" filter="url(#glow)" transform="rotate(20 0 30)"/>
-    <circle cx="0" cy="55" r="8" fill="url(#goldGradient)" filter="url(#glow)" transform="rotate(20 0 30)"/>
-  </g>
-
-  <!-- Main Title -->
-  <text x="400" y="100" font-family="Georgia, serif" font-size="42" font-weight="bold" text-anchor="middle" fill="url(#goldGradient)" filter="url(#glow)">
-    ENSHROUDED
-    <animate attributeName="opacity" values="1;0.8;1" dur="2s" repeatCount="indefinite"/>
-  </text>
-
-  <text x="400" y="135" font-family="Georgia, serif" font-size="24" text-anchor="middle" fill="#b8a590">
-    Server Configuration Editor
-  </text>
-
-  <!-- Decorative Line -->
-  <line x1="250" y1="155" x2="550" y2="155" stroke="url(#goldGradient)" stroke-width="2" opacity="0.6">
-    <animate attributeName="opacity" values="0.4;0.8;0.4" dur="3s" repeatCount="indefinite"/>
-  </line>
-
-  <!-- Subtitle -->
-  <text x="400" y="180" font-family="Georgia, serif" font-size="16" font-style="italic" text-anchor="middle" fill="#d4af37" opacity="0.8">
-    A Web-Based Tool for Dedicated Server Management
-  </text>
-</svg>
-```
+<p align="center">
+  <img src="https://img.shields.io/badge/🏰-Medieval_Themed-e67e22?style=flat-square" alt="Medieval Theme">
+  <img src="https://img.shields.io/badge/🔥-No_Installation-e74c3c?style=flat-square" alt="No Installation">
+  <img src="https://img.shields.io/badge/⚡-Pure_JavaScript-f39c12?style=flat-square" alt="Pure JavaScript">
+</p>
 
 ---
 
