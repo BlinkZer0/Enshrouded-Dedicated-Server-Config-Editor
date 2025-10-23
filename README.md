@@ -108,12 +108,12 @@ According to community discussions and existing tools on platforms like Nexus Mo
 
 ### Option 1: Local Use (No Server Required)
 1. **Download** or clone this repository
-2. **Open** `index.html` in any modern web browser
+2. **Open** `Enshrouded-Dedicated-Server-Config-Editor.html` in any modern web browser
 3. **Start configuring** your server settings
 4. **Save** the generated `enshrouded_server.json` file
 
 ### Option 2: Host on a Web Server
-1. Upload the `index.html` file to any web server
+1. Upload the `Enshrouded-Dedicated-Server-Config-Editor.html` file to any web server
 2. Access it via your browser
 3. Share the URL with other server administrators
 
@@ -127,7 +127,7 @@ According to community discussions and existing tools on platforms like Nexus Mo
 ## 📖 How to Use
 
 ### Step 1: Access the Editor
-Open `index.html` in your web browser. You'll see the medieval-themed configuration interface.
+Open `Enshrouded-Dedicated-Server-Config-Editor.html` in your web browser. You'll see the medieval-themed configuration interface.
 
 ### Step 2: Configure Your Server
 
@@ -268,10 +268,10 @@ Each user group supports:
 ```
 Enshrouded-Dedicated-Server-Config-Editor/
 │
-├── index.html                      # Main application (all-in-one file)
-├── enshrouded_server_readme.txt    # Official documentation
-├── README.md                       # This file
-└── LICENSE                         # MIT License
+├── Enshrouded-Dedicated-Server-Config-Editor.html  # Main application (all-in-one file)
+├── enshrouded_server_readme.txt                    # Official documentation
+├── README.md                                       # This file
+└── LICENSE                                         # MIT License
 ```
 
 ### Key Features of the Code
