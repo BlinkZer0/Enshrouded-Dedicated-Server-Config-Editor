@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enshrouded Server Configuration Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #1a1510;
+            --bg-medium: #2a211a;
+            --bg-light: #3d3028;
+            --accent-gold: #d4af37;
+            --accent-orange: #e67e22;
+            --text-light: #f4e4d0;
+            --text-dim: #b8a590;
+            --border-color: #5a4a38;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1510 0%, #2a211a 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--bg-medium) 0%, var(--bg-light) 100%);
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: var(--accent-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: var(--bg-medium);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .tab-button:hover {
+            background: var(--bg-light);
+            border-color: var(--accent-gold);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-gold) 100%);
+            border-color: var(--accent-gold);
+            color: var(--bg-dark);
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--bg-medium);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .label-description {
+            color: var(--text-dim);
+            font-size: 0.85em;
+            font-weight: 400;
+            margin-top: -4px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 12px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23d4af37' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+            appearance: none;
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 8px;
+            background: var(--bg-dark);
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-gold) 100%);
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-gold) 100%);
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        .slider-value {
+            min-width: 60px;
+            padding: 8px 12px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-dark);
+            border: 2px solid var(--border-color);
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-dim);
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-gold) 100%);
+            border-color: var(--accent-gold);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+            background-color: var(--bg-dark);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-gold) 100%);
+            color: var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-light);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-dark);
+            border-color: var(--accent-gold);
+            transform: translateY(-3px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .user-group {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .user-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .user-group-title {
+            font-size: 1.2em;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9em;
+            border-radius: 6px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 20px 30px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-gold) 100%);
+            color: var(--bg-dark);
+            font-weight: 600;
+            box-shadow: 0 10px 30px var(--shadow);
+            z-index: 1000;
+            animation: slideIn 0.3s;
+            display: none;
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .svg-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚔️ Enshrouded Server Configuration ⚔️</h1>
+            <p class="subtitle">Customize your dedicated server settings</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('general')">General Settings</button>
+            <button class="tab-button" onclick="switchTab('player')">Player Settings</button>
+            <button class="tab-button" onclick="switchTab('world')">World Settings</button>
+            <button class="tab-button" onclick="switchTab('enemy')">Enemy Settings</button>
+            <button class="tab-button" onclick="switchTab('resources')">Resources & Crafting</button>
+            <button class="tab-button" onclick="switchTab('userGroups')">User Groups</button>
+        </div>
+
+        <!-- General Settings Tab -->
+        <div id="general" class="tab-content active">
+            <div class="form-section">
+                <h2 class="section-title">Server Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Server Name</label>
+                        <input type="text" id="name" placeholder="Enter server name">
+                    </div>
+                    <div class="form-group">
+                        <label for="ip">IP Address</label>
+                        <input type="text" id="ip" placeholder="0.0.0.0">
+                    </div>
+                    <div class="form-group">
+                        <label for="queryPort">Query Port</label>
+                        <input type="number" id="queryPort" min="1024" max="65535">
+                    </div>
+                    <div class="form-group">
+                        <label for="slotCount">Player Slots</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="slotCount" min="1" max="16" value="16" oninput="updateSliderValue('slotCount')">
+                                <span class="slider-value" id="slotCount-value">16</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Communication Settings</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Enable Text Chat</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enableTextChat">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Enable Voice Chat</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enableVoiceChat">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="voiceChatMode">Voice Chat Mode</label>
+                        <select id="voiceChatMode">
+                            <option value="Proximity">Proximity</option>
+                            <option value="Global">Global</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Game Preset</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="gameSettingsPreset">Difficulty Preset</label>
+                        <p class="label-description">Select a preset or choose Custom for manual configuration</p>
+                        <select id="gameSettingsPreset" onchange="handlePresetChange()">
+                            <option value="Default">Default</option>
+                            <option value="Relaxed">Relaxed</option>
+                            <option value="Hard">Hard</option>
+                            <option value="Survival">Survival</option>
+                            <option value="Custom">Custom</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Player Settings Tab -->
+        <div id="player" class="tab-content">
+            <div class="form-section">
+                <h2 class="section-title">Player Stats</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="playerHealthFactor">Health (25% - 400%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="playerHealthFactor" min="0.25" max="4" step="0.25" value="1" oninput="updateSliderValue('playerHealthFactor', '%')">
+                                <span class="slider-value" id="playerHealthFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerManaFactor">Mana (25% - 400%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="playerManaFactor" min="0.25" max="4" step="0.25" value="1" oninput="updateSliderValue('playerManaFactor', '%')">
+                                <span class="slider-value" id="playerManaFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerStaminaFactor">Stamina (25% - 400%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="playerStaminaFactor" min="0.25" max="4" step="0.25" value="1" oninput="updateSliderValue('playerStaminaFactor', '%')">
+                                <span class="slider-value" id="playerStaminaFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="playerBodyHeatFactor">Body Heat (50% - 200%)</label>
+                        <p class="label-description">Resistance to cold weather</p>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="playerBodyHeatFactor" min="0.5" max="2" step="0.1" value="1" oninput="updateSliderValue('playerBodyHeatFactor', '%')">
+                                <span class="slider-value" id="playerBodyHeatFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Survival Mechanics</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Enable Weapon Durability</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enableDurability">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Enable Hunger & Starvation</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enableStarvingDebuff">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="foodBuffDurationFactor">Food Buff Duration (50% - 200%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="foodBuffDurationFactor" min="0.5" max="2" step="0.1" value="1" oninput="updateSliderValue('foodBuffDurationFactor', '%')">
+                                <span class="slider-value" id="foodBuffDurationFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="fromHungerToStarving">Hungry Duration (minutes)</label>
+                        <p class="label-description">Time before starvation (5-20 min)</p>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="fromHungerToStarving" min="300000000000" max="1200000000000" step="60000000000" value="600000000000" oninput="updateSliderValue('fromHungerToStarving', ' min', 60000000000)">
+                                <span class="slider-value" id="fromHungerToStarving-value">10 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="shroudTimeFactor">Shroud Time (50% - 200%)</label>
+                        <p class="label-description">How long you can stay in the Shroud</p>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="shroudTimeFactor" min="0.5" max="2" step="0.1" value="1" oninput="updateSliderValue('shroudTimeFactor', '%')">
+                                <span class="slider-value" id="shroudTimeFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tombstoneMode">Tombstone Mode</label>
+                        <p class="label-description">What happens when you die</p>
+                        <select id="tombstoneMode">
+                            <option value="AddBackpackMaterials">Lose Materials Only</option>
+                            <option value="Everything">Lose Everything</option>
+                            <option value="NoTombstone">Keep Everything</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="curseModifier">Shroud Curse Difficulty</label>
+                        <select id="curseModifier">
+                            <option value="Easy">Easy (Disabled)</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Hard">Hard (2x chance)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Experience Gain</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="experienceCombatFactor">Combat XP (25% - 200%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="experienceCombatFactor" min="0.25" max="2" step="0.25" value="1" oninput="updateSliderValue('experienceCombatFactor', '%')">
+                                <span class="slider-value" id="experienceCombatFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="experienceMiningFactor">Mining XP (0% - 200%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="experienceMiningFactor" min="0" max="2" step="0.25" value="1" oninput="updateSliderValue('experienceMiningFactor', '%')">
+                                <span class="slider-value" id="experienceMiningFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="experienceExplorationQuestsFactor">Exploration/Quest XP (25% - 200%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="experienceExplorationQuestsFactor" min="0.25" max="2" step="0.25" value="1" oninput="updateSliderValue('experienceExplorationQuestsFactor', '%')">
+                                <span class="slider-value" id="experienceExplorationQuestsFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- World Settings Tab -->
+        <div id="world" class="tab-content">
+            <div class="form-section">
+                <h2 class="section-title">Day/Night Cycle</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="dayTimeDuration">Daytime Duration (minutes)</label>
+                        <p class="label-description">2-60 minutes</p>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="dayTimeDuration" min="120000000000" max="3600000000000" step="60000000000" value="1800000000000" oninput="updateSliderValue('dayTimeDuration', ' min', 60000000000)">
+                                <span class="slider-value" id="dayTimeDuration-value">30 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nightTimeDuration">Nighttime Duration (minutes)</label>
+                        <p class="label-description">2-60 minutes</p>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="nightTimeDuration" min="120000000000" max="3600000000000" step="60000000000" value="720000000000" oninput="updateSliderValue('nightTimeDuration', ' min', 60000000000)">
+                                <span class="slider-value" id="nightTimeDuration-value">12 min</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Weather & Environment</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="weatherFrequency">Weather Frequency</label>
+                        <select id="weatherFrequency">
+                            <option value="Disabled">Disabled</option>
+                            <option value="Rare">Rare</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Often">Often</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Enable Glider Turbulences</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enableGliderTurbulences">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Wildlife</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="tamingStartleRepercussion">Taming Failure Penalty</label>
+                        <select id="tamingStartleRepercussion">
+                            <option value="KeepProgress">Keep Progress</option>
+                            <option value="LoseSomeProgress">Lose Some Progress</option>
+                            <option value="LoseAllProgress">Lose All Progress</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enemy Settings Tab -->
+        <div id="enemy" class="tab-content">
+            <div class="form-section">
+                <h2 class="section-title">Enemy Spawning</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="randomSpawnerAmount">Enemy Amount</label>
+                        <select id="randomSpawnerAmount">
+                            <option value="Few">Few</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Many">Many</option>
+                            <option value="Extreme">Extreme</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="aggroPoolAmount">Simultaneous Attackers</label>
+                        <select id="aggroPoolAmount">
+                            <option value="Few">Few</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Many">Many</option>
+                            <option value="Extreme">Extreme</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pacify All Enemies</label>
+                        <p class="label-description">Enemies won't attack unless provoked</p>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="pacifyAllEnemies">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Regular Enemy Stats</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="enemyDamageFactor">Enemy Damage (25% - 500%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="enemyDamageFactor" min="0.25" max="5" step="0.25" value="1" oninput="updateSliderValue('enemyDamageFactor', '%')">
+                                <span class="slider-value" id="enemyDamageFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="enemyHealthFactor">Enemy Health (25% - 400%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="enemyHealthFactor" min="0.25" max="4" step="0.25" value="1" oninput="updateSliderValue('enemyHealthFactor', '%')">
+                                <span class="slider-value" id="enemyHealthFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="enemyStaminaFactor">Enemy Stamina (50% - 200%)</label>
+                        <p class="label-description">Higher = harder to stun</p>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="enemyStaminaFactor" min="0.5" max="2" step="0.1" value="1" oninput="updateSliderValue('enemyStaminaFactor', '%')">
+                                <span class="slider-value" id="enemyStaminaFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="enemyPerceptionRangeFactor">Enemy Perception (50% - 200%)</label>
+                        <p class="label-description">How far enemies can see/hear</p>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="enemyPerceptionRangeFactor" min="0.5" max="2" step="0.1" value="1" oninput="updateSliderValue('enemyPerceptionRangeFactor', '%')">
+                                <span class="slider-value" id="enemyPerceptionRangeFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="threatBonus">Attack Frequency (25% - 400%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="threatBonus" min="0.25" max="4" step="0.25" value="1" oninput="updateSliderValue('threatBonus', '%')">
+                                <span class="slider-value" id="threatBonus-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Boss Stats</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="bossDamageFactor">Boss Damage (20% - 500%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="bossDamageFactor" min="0.2" max="5" step="0.2" value="1" oninput="updateSliderValue('bossDamageFactor', '%')">
+                                <span class="slider-value" id="bossDamageFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bossHealthFactor">Boss Health (20% - 500%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="bossHealthFactor" min="0.2" max="5" step="0.2" value="1" oninput="updateSliderValue('bossHealthFactor', '%')">
+                                <span class="slider-value" id="bossHealthFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources & Crafting Tab -->
+        <div id="resources" class="tab-content">
+            <div class="form-section">
+                <h2 class="section-title">Resource Gathering</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="miningDamageFactor">Mining Effectiveness (50% - 200%)</label>
+                        <p class="label-description">Damage and yield per hit</p>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="miningDamageFactor" min="0.5" max="2" step="0.1" value="1" oninput="updateSliderValue('miningDamageFactor', '%')">
+                                <span class="slider-value" id="miningDamageFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceDropStackAmountFactor">Resource Gain (25% - 200%)</label>
+                        <p class="label-description">Materials per loot stack</p>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="resourceDropStackAmountFactor" min="0.25" max="2" step="0.25" value="1" oninput="updateSliderValue('resourceDropStackAmountFactor', '%')">
+                                <span class="slider-value" id="resourceDropStackAmountFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Production & Farming</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="plantGrowthSpeedFactor">Plant Growth Speed (25% - 200%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="plantGrowthSpeedFactor" min="0.25" max="2" step="0.25" value="1" oninput="updateSliderValue('plantGrowthSpeedFactor', '%')">
+                                <span class="slider-value" id="plantGrowthSpeedFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="factoryProductionSpeedFactor">Workstation Speed (25% - 200%)</label>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="factoryProductionSpeedFactor" min="0.25" max="2" step="0.25" value="1" oninput="updateSliderValue('factoryProductionSpeedFactor', '%')">
+                                <span class="slider-value" id="factoryProductionSpeedFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Weapon Upgrades</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="perkCostFactor">Upgrade Cost (25% - 200%)</label>
+                        <p class="label-description">Runes required for upgrades</p>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="perkCostFactor" min="0.25" max="2" step="0.25" value="1" oninput="updateSliderValue('perkCostFactor', '%')">
+                                <span class="slider-value" id="perkCostFactor-value">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="perkUpgradeRecyclingFactor">Recycling Yield (0% - 100%)</label>
+                        <p class="label-description">Runes returned when salvaging</p>
+                        <div class="slider-container">
+                            <div class="slider-wrapper">
+                                <input type="range" id="perkUpgradeRecyclingFactor" min="0" max="1" step="0.1" value="0.5" oninput="updateSliderValue('perkUpgradeRecyclingFactor', '%')">
+                                <span class="slider-value" id="perkUpgradeRecyclingFactor-value">50%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Groups Tab -->
+        <div id="userGroups" class="tab-content">
+            <div class="form-section">
+                <h2 class="section-title">User Groups & Permissions</h2>
+                <p class="label-description" style="margin-bottom: 20px;">Define password-protected groups with different permission levels</p>
+
+                <div id="userGroupsContainer"></div>
+
+                <button class="btn btn-secondary" onclick="addUserGroup()">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                    Add New User Group
+                </button>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleFileSelect(event)">
+            <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                <svg class="svg-icon" viewBox="0 0 24 24">
+                    <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
+                </svg>
+                Load Config
+            </button>
+            <button class="btn btn-primary" onclick="saveConfig()">
+                <svg class="svg-icon" viewBox="0 0 24 24">
+                    <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+                </svg>
+                Save Configuration
+            </button>
+            <button class="btn btn-secondary" onclick="exportConfig()">
+                <svg class="svg-icon" viewBox="0 0 24 24">
+                    <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/>
+                </svg>
+                Download JSON
+            </button>
+            <button class="btn btn-danger" onclick="resetToDefaults()">
+                <svg class="svg-icon" viewBox="0 0 24 24">
+                    <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                </svg>
+                Reset to Defaults
+            </button>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        let config = {};
+
+        // Switch between tabs
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Update slider value display
+        function updateSliderValue(id, suffix = '', divisor = 1) {
+            const slider = document.getElementById(id);
+            const valueDisplay = document.getElementById(id + '-value');
+            let value = parseFloat(slider.value);
+
+            if (divisor !== 1) {
+                value = value / divisor;
+            }
+
+            if (suffix === '%') {
+                valueDisplay.textContent = Math.round(value * 100) + suffix;
+            } else {
+                valueDisplay.textContent = value + suffix;
+            }
+        }
+
+        // Handle preset change
+        function handlePresetChange() {
+            const preset = document.getElementById('gameSettingsPreset').value;
+            if (preset !== 'Custom') {
+                if (confirm(`Switching to ${preset} preset will override your custom settings. Continue?`)) {
+                    applyPreset(preset);
+                }
+            }
+        }
+
+        // Apply difficulty preset
+        function applyPreset(preset) {
+            const presets = {
+                'Default': {
+                    playerHealthFactor: 1, playerManaFactor: 1, playerStaminaFactor: 1,
+                    playerBodyHeatFactor: 1, enableDurability: true, enableStarvingDebuff: false,
+                    foodBuffDurationFactor: 1, fromHungerToStarving: 600000000000,
+                    shroudTimeFactor: 1, tombstoneMode: 'AddBackpackMaterials',
+                    enableGliderTurbulences: true, weatherFrequency: 'Normal',
+                    miningDamageFactor: 1, plantGrowthSpeedFactor: 1,
+                    resourceDropStackAmountFactor: 1, factoryProductionSpeedFactor: 1,
+                    perkUpgradeRecyclingFactor: 0.5, perkCostFactor: 1,
+                    experienceCombatFactor: 1, experienceMiningFactor: 1,
+                    experienceExplorationQuestsFactor: 1, randomSpawnerAmount: 'Normal',
+                    aggroPoolAmount: 'Normal', enemyDamageFactor: 1, enemyHealthFactor: 1,
+                    enemyStaminaFactor: 1, enemyPerceptionRangeFactor: 1,
+                    bossDamageFactor: 1, bossHealthFactor: 1, threatBonus: 1,
+                    pacifyAllEnemies: false, tamingStartleRepercussion: 'LoseSomeProgress',
+                    dayTimeDuration: 1800000000000, nightTimeDuration: 720000000000,
+                    curseModifier: 'Normal'
+                }
+            };
+
+            if (presets[preset]) {
+                Object.assign(config.gameSettings, presets[preset]);
+                loadConfigToUI();
+                showNotification(`${preset} preset applied!`);
+            }
+        }
+
+        // Handle file selection
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        config = JSON.parse(e.target.result);
+                        loadConfigToUI();
+                        showNotification('Configuration loaded successfully!');
+                    } catch (error) {
+                        showNotification('Error parsing JSON: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Load configuration from file (fallback for auto-load)
+        async function loadConfig() {
+            try {
+                const response = await fetch('enshrouded_server.json');
+                config = await response.json();
+                loadConfigToUI();
+                showNotification('Configuration loaded from enshrouded_server.json');
+            } catch (error) {
+                // Silently fail if file doesn't exist - user can load manually
+                console.log('No default config file found, starting with empty config');
+            }
+        }
+
+        // Load config data into UI
+        function loadConfigToUI() {
+            // General settings
+            document.getElementById('name').value = config.name || '';
+            document.getElementById('ip').value = config.ip || '0.0.0.0';
+            document.getElementById('queryPort').value = config.queryPort || 15637;
+            document.getElementById('slotCount').value = config.slotCount || 16;
+            updateSliderValue('slotCount');
+
+            document.getElementById('enableTextChat').checked = config.enableTextChat || false;
+            document.getElementById('enableVoiceChat').checked = config.enableVoiceChat || false;
+            document.getElementById('voiceChatMode').value = config.voiceChatMode || 'Proximity';
+            document.getElementById('gameSettingsPreset').value = config.gameSettingsPreset || 'Default';
+
+            // Game settings
+            if (config.gameSettings) {
+                const gs = config.gameSettings;
+
+                // Player stats
+                setSliderValue('playerHealthFactor', gs.playerHealthFactor, '%');
+                setSliderValue('playerManaFactor', gs.playerManaFactor, '%');
+                setSliderValue('playerStaminaFactor', gs.playerStaminaFactor, '%');
+                setSliderValue('playerBodyHeatFactor', gs.playerBodyHeatFactor, '%');
+
+                // Survival
+                document.getElementById('enableDurability').checked = gs.enableDurability !== false;
+                document.getElementById('enableStarvingDebuff').checked = gs.enableStarvingDebuff || false;
+                setSliderValue('foodBuffDurationFactor', gs.foodBuffDurationFactor, '%');
+                setSliderValue('fromHungerToStarving', gs.fromHungerToStarving, ' min', 60000000000);
+                setSliderValue('shroudTimeFactor', gs.shroudTimeFactor, '%');
+                document.getElementById('tombstoneMode').value = gs.tombstoneMode || 'AddBackpackMaterials';
+                document.getElementById('curseModifier').value = gs.curseModifier || 'Normal';
+
+                // Experience
+                setSliderValue('experienceCombatFactor', gs.experienceCombatFactor, '%');
+                setSliderValue('experienceMiningFactor', gs.experienceMiningFactor, '%');
+                setSliderValue('experienceExplorationQuestsFactor', gs.experienceExplorationQuestsFactor, '%');
+
+                // World
+                setSliderValue('dayTimeDuration', gs.dayTimeDuration, ' min', 60000000000);
+                setSliderValue('nightTimeDuration', gs.nightTimeDuration, ' min', 60000000000);
+                document.getElementById('weatherFrequency').value = gs.weatherFrequency || 'Normal';
+                document.getElementById('enableGliderTurbulences').checked = gs.enableGliderTurbulences !== false;
+                document.getElementById('tamingStartleRepercussion').value = gs.tamingStartleRepercussion || 'LoseSomeProgress';
+
+                // Enemies
+                document.getElementById('randomSpawnerAmount').value = gs.randomSpawnerAmount || 'Normal';
+                document.getElementById('aggroPoolAmount').value = gs.aggroPoolAmount || 'Normal';
+                document.getElementById('pacifyAllEnemies').checked = gs.pacifyAllEnemies || false;
+                setSliderValue('enemyDamageFactor', gs.enemyDamageFactor, '%');
+                setSliderValue('enemyHealthFactor', gs.enemyHealthFactor, '%');
+                setSliderValue('enemyStaminaFactor', gs.enemyStaminaFactor, '%');
+                setSliderValue('enemyPerceptionRangeFactor', gs.enemyPerceptionRangeFactor, '%');
+                setSliderValue('bossDamageFactor', gs.bossDamageFactor, '%');
+                setSliderValue('bossHealthFactor', gs.bossHealthFactor, '%');
+                setSliderValue('threatBonus', gs.threatBonus, '%');
+
+                // Resources
+                setSliderValue('miningDamageFactor', gs.miningDamageFactor, '%');
+                setSliderValue('resourceDropStackAmountFactor', gs.resourceDropStackAmountFactor, '%');
+                setSliderValue('plantGrowthSpeedFactor', gs.plantGrowthSpeedFactor, '%');
+                setSliderValue('factoryProductionSpeedFactor', gs.factoryProductionSpeedFactor, '%');
+                setSliderValue('perkCostFactor', gs.perkCostFactor, '%');
+                setSliderValue('perkUpgradeRecyclingFactor', gs.perkUpgradeRecyclingFactor, '%');
+            }
+
+            // User groups
+            renderUserGroups();
+        }
+
+        function setSliderValue(id, value, suffix = '', divisor = 1) {
+            const slider = document.getElementById(id);
+            if (slider && value !== undefined) {
+                slider.value = value;
+                updateSliderValue(id, suffix, divisor);
+            }
+        }
+
+        // Render user groups
+        function renderUserGroups() {
+            const container = document.getElementById('userGroupsContainer');
+            container.innerHTML = '';
+
+            if (!config.userGroups || config.userGroups.length === 0) {
+                config.userGroups = [];
+            }
+
+            config.userGroups.forEach((group, index) => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'user-group';
+                groupDiv.innerHTML = `
+                    <div class="user-group-header">
+                        <span class="user-group-title">${group.name || 'User Group'}</span>
+                        <button class="btn btn-danger btn-small" onclick="removeUserGroup(${index})">
+                            <svg class="svg-icon" viewBox="0 0 24 24">
+                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                            </svg>
+                            Remove
+                        </button>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Group Name</label>
+                            <input type="text" value="${group.name || ''}" onchange="updateUserGroup(${index}, 'name', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="text" value="${group.password || ''}" onchange="updateUserGroup(${index}, 'password', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Reserved Slots</label>
+                            <input type="number" min="0" max="16" value="${group.reservedSlots || 0}" onchange="updateUserGroup(${index}, 'reservedSlots', parseInt(this.value))">
+                        </div>
+                        <div class="form-group">
+                            <label>Can Kick/Ban Players</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${group.canKickBan ? 'checked' : ''} onchange="updateUserGroup(${index}, 'canKickBan', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Can Access Inventories</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${group.canAccessInventories ? 'checked' : ''} onchange="updateUserGroup(${index}, 'canAccessInventories', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Can Edit Base</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${group.canEditBase ? 'checked' : ''} onchange="updateUserGroup(${index}, 'canEditBase', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Can Extend Base</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${group.canExtendBase ? 'checked' : ''} onchange="updateUserGroup(${index}, 'canExtendBase', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(groupDiv);
+            });
+        }
+
+        function addUserGroup() {
+            if (!config.userGroups) {
+                config.userGroups = [];
+            }
+            config.userGroups.push({
+                name: 'New Group',
+                password: '',
+                canKickBan: false,
+                canAccessInventories: false,
+                canEditBase: false,
+                canExtendBase: false,
+                reservedSlots: 0
+            });
+            renderUserGroups();
+        }
+
+        function removeUserGroup(index) {
+            if (confirm('Are you sure you want to remove this user group?')) {
+                config.userGroups.splice(index, 1);
+                renderUserGroups();
+            }
+        }
+
+        function updateUserGroup(index, field, value) {
+            config.userGroups[index][field] = value;
+        }
+
+        // Save configuration
+        function saveConfig() {
+            collectConfigFromUI();
+
+            const dataStr = JSON.stringify(config, null, '\t');
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'enshrouded_server.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showNotification('Configuration saved! Download started.');
+        }
+
+        // Collect UI data into config object
+        function collectConfigFromUI() {
+            config.name = document.getElementById('name').value;
+            config.ip = document.getElementById('ip').value;
+            config.queryPort = parseInt(document.getElementById('queryPort').value);
+            config.slotCount = parseInt(document.getElementById('slotCount').value);
+            config.enableTextChat = document.getElementById('enableTextChat').checked;
+            config.enableVoiceChat = document.getElementById('enableVoiceChat').checked;
+            config.voiceChatMode = document.getElementById('voiceChatMode').value;
+            config.gameSettingsPreset = document.getElementById('gameSettingsPreset').value;
+
+            if (!config.gameSettings) config.gameSettings = {};
+            const gs = config.gameSettings;
+
+            gs.playerHealthFactor = parseFloat(document.getElementById('playerHealthFactor').value);
+            gs.playerManaFactor = parseFloat(document.getElementById('playerManaFactor').value);
+            gs.playerStaminaFactor = parseFloat(document.getElementById('playerStaminaFactor').value);
+            gs.playerBodyHeatFactor = parseFloat(document.getElementById('playerBodyHeatFactor').value);
+            gs.enableDurability = document.getElementById('enableDurability').checked;
+            gs.enableStarvingDebuff = document.getElementById('enableStarvingDebuff').checked;
+            gs.foodBuffDurationFactor = parseFloat(document.getElementById('foodBuffDurationFactor').value);
+            gs.fromHungerToStarving = parseInt(document.getElementById('fromHungerToStarving').value);
+            gs.shroudTimeFactor = parseFloat(document.getElementById('shroudTimeFactor').value);
+            gs.tombstoneMode = document.getElementById('tombstoneMode').value;
+            gs.curseModifier = document.getElementById('curseModifier').value;
+            gs.experienceCombatFactor = parseFloat(document.getElementById('experienceCombatFactor').value);
+            gs.experienceMiningFactor = parseFloat(document.getElementById('experienceMiningFactor').value);
+            gs.experienceExplorationQuestsFactor = parseFloat(document.getElementById('experienceExplorationQuestsFactor').value);
+            gs.dayTimeDuration = parseInt(document.getElementById('dayTimeDuration').value);
+            gs.nightTimeDuration = parseInt(document.getElementById('nightTimeDuration').value);
+            gs.weatherFrequency = document.getElementById('weatherFrequency').value;
+            gs.enableGliderTurbulences = document.getElementById('enableGliderTurbulences').checked;
+            gs.tamingStartleRepercussion = document.getElementById('tamingStartleRepercussion').value;
+            gs.randomSpawnerAmount = document.getElementById('randomSpawnerAmount').value;
+            gs.aggroPoolAmount = document.getElementById('aggroPoolAmount').value;
+            gs.pacifyAllEnemies = document.getElementById('pacifyAllEnemies').checked;
+            gs.enemyDamageFactor = parseFloat(document.getElementById('enemyDamageFactor').value);
+            gs.enemyHealthFactor = parseFloat(document.getElementById('enemyHealthFactor').value);
+            gs.enemyStaminaFactor = parseFloat(document.getElementById('enemyStaminaFactor').value);
+            gs.enemyPerceptionRangeFactor = parseFloat(document.getElementById('enemyPerceptionRangeFactor').value);
+            gs.bossDamageFactor = parseFloat(document.getElementById('bossDamageFactor').value);
+            gs.bossHealthFactor = parseFloat(document.getElementById('bossHealthFactor').value);
+            gs.threatBonus = parseFloat(document.getElementById('threatBonus').value);
+            gs.miningDamageFactor = parseFloat(document.getElementById('miningDamageFactor').value);
+            gs.resourceDropStackAmountFactor = parseFloat(document.getElementById('resourceDropStackAmountFactor').value);
+            gs.plantGrowthSpeedFactor = parseFloat(document.getElementById('plantGrowthSpeedFactor').value);
+            gs.factoryProductionSpeedFactor = parseFloat(document.getElementById('factoryProductionSpeedFactor').value);
+            gs.perkCostFactor = parseFloat(document.getElementById('perkCostFactor').value);
+            gs.perkUpgradeRecyclingFactor = parseFloat(document.getElementById('perkUpgradeRecyclingFactor').value);
+
+            config.saveDirectory = config.saveDirectory || './savegame';
+            config.logDirectory = config.logDirectory || './logs';
+        }
+
+        // Export configuration
+        function exportConfig() {
+            collectConfigFromUI();
+            const dataStr = JSON.stringify(config, null, '\t');
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'enshrouded_server.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showNotification('Configuration exported!');
+        }
+
+        // Reset to defaults
+        function resetToDefaults() {
+            if (confirm('This will reset all settings to default values. Continue?')) {
+                config = {
+                    name: 'Enshrouded Server',
+                    saveDirectory: './savegame',
+                    logDirectory: './logs',
+                    ip: '0.0.0.0',
+                    queryPort: 15637,
+                    slotCount: 16,
+                    voiceChatMode: 'Proximity',
+                    enableVoiceChat: false,
+                    enableTextChat: false,
+                    gameSettingsPreset: 'Default',
+                    gameSettings: {},
+                    userGroups: [
+                        {
+                            name: 'Admin',
+                            password: 'AdminXXXXXXXX',
+                            canKickBan: true,
+                            canAccessInventories: true,
+                            canEditBase: true,
+                            canExtendBase: true,
+                            reservedSlots: 0
+                        },
+                        {
+                            name: 'Friend',
+                            password: 'FriendXXXXXXXX',
+                            canKickBan: false,
+                            canAccessInventories: true,
+                            canEditBase: true,
+                            canExtendBase: false,
+                            reservedSlots: 0
+                        },
+                        {
+                            name: 'Guest',
+                            password: 'GuestXXXXXXXX',
+                            canKickBan: false,
+                            canAccessInventories: false,
+                            canEditBase: false,
+                            canExtendBase: false,
+                            reservedSlots: 0
+                        }
+                    ]
+                };
+                applyPreset('Default');
+                loadConfigToUI();
+                showNotification('Reset to default configuration!');
+            }
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Load config on page load
+        window.addEventListener('load', loadConfig);
+    </script>
+</body>
+</html>
