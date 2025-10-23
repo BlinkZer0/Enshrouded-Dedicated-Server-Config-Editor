@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="240" viewBox="0 0 960 240" role="img" aria-labelledby="title desc">
+  <title id="title">Enshrouded Dedicated Server Config Editor</title>
+  <desc id="desc">Dark, shrouded banner with gold title, crossed swords, drifting fog and rising embers. SMIL-only animation for GitHub compatibility.</desc>
+  <defs>
+    <!-- Background gradients: cold shroud and vignette -->
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0b0f12"/>
+      <stop offset="100%" stop-color="#12161c"/>
+    </linearGradient>
+    <radialGradient id="vignette" cx="50%" cy="50%" r="65%">
+      <stop offset="60%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.55"/>
+    </radialGradient>
+
+    <!-- Gold with subtle animated shimmer (warm Enshrouded tone) -->
+    <linearGradient id="gold" x1="-50%" y1="0%" x2="50%" y2="0%">
+      <stop offset="0%" stop-color="#7a4c12"/>
+      <stop offset="30%" stop-color="#d4af37"/>
+      <stop offset="55%" stop-color="#ffe8a3"/>
+      <stop offset="80%" stop-color="#d4af37"/>
+      <stop offset="100%" stop-color="#7a4c12"/>
+      <animate attributeName="x1" values="-50%;-120%" dur="7s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="50%;-20%" dur="7s" repeatCount="indefinite"/>
+    </linearGradient>
+
+    <!-- Steel for swords -->
+    <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#cfd6e6"/>
+      <stop offset="50%" stop-color="#9aa6bb"/>
+      <stop offset="100%" stop-color="#7f8a9a"/>
+    </linearGradient>
+    <linearGradient id="leather" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#734523"/>
+      <stop offset="100%" stop-color="#3a2415"/>
+    </linearGradient>
+
+    <!-- Fog bands as reusable paths -->
+    <path id="fog1" d="M0,0 C 60,-12 140,10 220,-6 C 300,-22 380,8 460,-4 C 540,-16 620,6 700,-8 C 780,-20 860,4 940,-6 L 940,40 L 0,40 Z"/>
+    <path id="fog2" d="M0,0 C 80,-10 160,12 240,-2 C 320,-16 400,10 480,-6 C 560,-22 640,8 720,-4 C 800,-16 880,6 960,-8 L 960,44 L 0,44 Z"/>
+
+    <!-- Ember motion path -->
+    <path id="emberPath" d="M0,30 C 40,0 80,-10 120,-30" fill="none"/>
+  </defs>
+
+  <!-- Backdrop -->
+  <rect width="960" height="240" fill="url(#bg)"/>
+  <rect width="960" height="240" fill="url(#vignette)"/>
+
+  <!-- Crossed swords silhouette behind title -->
+  <g transform="translate(480,120)" opacity="0.35">
+    <!-- Left sword -->
+    <g transform="rotate(-35)">
+      <rect x="-6" y="-70" width="12" height="100" rx="3" fill="url(#steel)"/>
+      <polygon points="0,-100 8,-70 -8,-70" fill="url(#steel)"/>
+      <rect x="-22" y="20" width="44" height="8" rx="2" fill="#68401f"/>
+      <rect x="-4" y="28" width="8" height="28" rx="2" fill="url(#leather)"/>
+      <circle cx="0" cy="58" r="4" fill="#5a3319"/>
+    </g>
+    <!-- Right sword -->
+    <g transform="rotate(35)">
+      <rect x="-6" y="-70" width="12" height="100" rx="3" fill="url(#steel)"/>
+      <polygon points="0,-100 8,-70 -8,-70" fill="url(#steel)"/>
+      <rect x="-22" y="20" width="44" height="8" rx="2" fill="#68401f"/>
+      <rect x="-4" y="28" width="8" height="28" rx="2" fill="url(#leather)"/>
+      <circle cx="0" cy="58" r="4" fill="#5a3319"/>
+    </g>
+  </g>
+
+  <!-- Drifting shroud fog -->
+  <g fill="#8ec5cf" opacity="0.12">
+    <use href="#fog1" x="-80" y="36">
+      <animateTransform attributeName="transform" type="translate" values="0,0; 40,0; -20,0; 0,0" dur="22s" repeatCount="indefinite"/>
+    </use>
+    <use href="#fog2" x="-40" y="78" opacity="0.14">
+      <animateTransform attributeName="transform" type="translate" values="0,0; -30,0; 20,0; 0,0" dur="26s" repeatCount="indefinite"/>
+    </use>
+    <use href="#fog1" x="-120" y="120" opacity="0.10">
+      <animateTransform attributeName="transform" type="translate" values="0,0; 50,0; -30,0; 0,0" dur="30s" repeatCount="indefinite"/>
+    </use>
+  </g>
+
+  <!-- Rising embers -->
+  <g fill="#ffbb5c" opacity="0.9">
+    <g transform="translate(140,190)">
+      <circle r="2">
+        <animateMotion dur="5.2s" repeatCount="indefinite" rotate="auto">
+          <mpath xlink:href="#emberPath" xmlns:xlink="http://www.w3.org/1999/xlink" />
+        </animateMotion>
+        <animate attributeName="opacity" values="0;1;0" dur="5.2s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    <g transform="translate(820,200)" opacity="0.8">
+      <circle r="2">
+        <animateMotion dur="4.6s" repeatCount="indefinite" rotate="auto">
+          <mpath xlink:href="#emberPath" xmlns:xlink="http://www.w3.org/1999/xlink" />
+        </animateMotion>
+        <animate attributeName="opacity" values="0;1;0" dur="4.6s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    <g transform="translate(600,198)" opacity="0.7">
+      <circle r="1.6">
+        <animateMotion dur="4.0s" repeatCount="indefinite" rotate="auto">
+          <mpath xlink:href="#emberPath" xmlns:xlink="http://www.w3.org/1999/xlink" />
+        </animateMotion>
+        <animate attributeName="opacity" values="0;1;0" dur="4.0s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+  </g>
+
+  <!-- Title and subtitle -->
+  <g transform="translate(60,56)">
+    <text x="0" y="78" font-family="Georgia, 'Times New Roman', serif" font-size="46" letter-spacing="1" fill="url(#gold)" stroke="#1d1406" stroke-width="1.3" paint-order="stroke">
+      Enshrouded Server Config Editor
+    </text>
+    <text x="2" y="112" font-family="Georgia, 'Times New Roman', serif" font-size="20" fill="#c7a15a" opacity="0.9">
+      Browser-based editor for enshrouded_server.json
+      <animate attributeName="opacity" values="0.7;1;0.85;1" dur="6s" repeatCount="indefinite"/>
+    </text>
+  </g>
+</svg>

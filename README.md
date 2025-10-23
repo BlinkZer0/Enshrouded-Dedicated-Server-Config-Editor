@@ -2,9 +2,16 @@
   <img src="https://img.shields.io/badge/⚔️_ENSHROUDED-Server_Config_Editor-d4af37?style=for-the-badge&labelColor=2a211a" alt="Enshrouded Server Config Editor">
 </p>
 
+<p align="center">
+  <img src="assets/header.svg" alt="Enshrouded Server Config Editor — Animated Medieval Banner">
+</p>
+
+<!-- Legacy header hidden on GitHub -->
+<!--
 <h1 align="center">
   <img src="https://readme-typing-svg.demolab.com?font=Georgia&size=35&duration=3000&pause=1000&color=D4AF37&center=true&vCenter=true&width=600&lines=⚔️+Enshrouded+Server+Editor+⚔️;Web-Based+JSON+Config+Tool;No+Manual+Editing+Required" alt="Typing SVG" />
 </h1>
+-->
 
 <p align="center">
   <img src="https://img.shields.io/badge/🏰-Medieval_Themed-e67e22?style=flat-square" alt="Medieval Theme">
