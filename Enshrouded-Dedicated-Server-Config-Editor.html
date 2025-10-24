@@ -44,6 +44,7 @@
             border-radius: 15px;
             border: 2px solid var(--border-color);
             box-shadow: 0 10px 30px var(--shadow);
+            position: relative;
         }
 
         h1 {
@@ -57,6 +58,26 @@
             color: var(--text-dim);
             font-size: 1.1em;
         }
+
+        /* Decorative torches flanking header */
+        .torch {
+            position: absolute;
+            top: 8px;
+            width: 64px;
+            height: 120px;
+            filter: drop-shadow(0 0 6px rgba(230, 126, 34, 0.6));
+            opacity: 0.95;
+        }
+        .torch-left { left: -10px; }
+        .torch-right { right: -10px; transform: scaleX(-1); }
+
+        @keyframes flameFlicker {
+            0%   { transform: translateY(0) scale(1);   filter: drop-shadow(0 0 6px rgba(212,175,55,0.6)); }
+            50%  { transform: translateY(-2px) scale(1.05); filter: drop-shadow(0 0 12px rgba(230,126,34,0.9)); }
+            100% { transform: translateY(0) scale(0.98); filter: drop-shadow(0 0 6px rgba(212,175,55,0.6)); }
+        }
+        .torch .flame-primary { animation: flameFlicker 1.35s ease-in-out infinite alternate; transform-origin: 50% 100%; }
+        .torch .flame-secondary { animation: flameFlicker 1.8s ease-in-out infinite alternate; transform-origin: 50% 100%; opacity: 0.85; }
 
         .tabs {
             display: flex;
@@ -136,6 +157,44 @@
             color: var(--text-light);
             font-weight: 600;
             font-size: 0.95em;
+        }
+
+        /* Inline help trigger */
+        .help {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            margin-left: 8px;
+            border-radius: 50%;
+            border: 1px solid var(--accent-gold);
+            background: var(--bg-light);
+            color: var(--accent-gold);
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+            cursor: help;
+        }
+        /* Tooltip bubble rendered to <body>, positioned in JS to avoid viewport overflow */
+        .tooltip {
+            position: fixed;
+            top: 0; left: 0;
+            display: none;
+            opacity: 0;
+            pointer-events: none;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 8px 20px var(--shadow);
+            max-width: 340px;
+            white-space: normal;
+            word-break: break-word;
+            hyphens: auto;
+            z-index: 1000;
+            transition: opacity 0.15s ease;
         }
 
         .label-description {
@@ -406,6 +465,8 @@
                 font-size: 1.8em;
             }
 
+            .torch { display: none; }
+
             .action-buttons {
                 flex-direction: column;
             }
@@ -420,8 +481,38 @@
 <body>
     <div class="container">
         <header>
+            <div class="torch torch-left" aria-hidden="true">
+                <svg viewBox="0 0 64 120" width="64" height="120" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="flameGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#ffd166"/>
+                            <stop offset="60%" stop-color="#ff8c1a"/>
+                            <stop offset="100%" stop-color="#e25822"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="28" y="60" width="8" height="50" fill="#5a4a38" stroke="#3d3028"/>
+                    <rect x="18" y="56" width="28" height="6" rx="3" fill="#3d3028" stroke="#5a4a38"/>
+                    <path class="flame-secondary" d="M32 14 C26 26, 22 30, 25 40 C28 50, 36 50, 39 40 C42 30, 38 26, 32 14 Z" fill="url(#flameGrad)"/>
+                    <path class="flame-primary" d="M32 8 C24 22, 20 28, 24 40 C28 54, 36 54, 40 40 C44 28, 40 22, 32 8 Z" fill="url(#flameGrad)"/>
+                </svg>
+            </div>
             <h1>⚔️ Enshrouded Server Configuration ⚔️</h1>
             <p class="subtitle">Customize your dedicated server settings</p>
+            <div class="torch torch-right" aria-hidden="true">
+                <svg viewBox="0 0 64 120" width="64" height="120" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="flameGradR" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#ffd166"/>
+                            <stop offset="60%" stop-color="#ff8c1a"/>
+                            <stop offset="100%" stop-color="#e25822"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="28" y="60" width="8" height="50" fill="#5a4a38" stroke="#3d3028"/>
+                    <rect x="18" y="56" width="28" height="6" rx="3" fill="#3d3028" stroke="#5a4a38"/>
+                    <path class="flame-secondary" d="M32 14 C26 26, 22 30, 25 40 C28 50, 36 50, 39 40 C42 30, 38 26, 32 14 Z" fill="url(#flameGradR)"/>
+                    <path class="flame-primary" d="M32 8 C24 22, 20 28, 24 40 C28 54, 36 54, 40 40 C44 28, 40 22, 32 8 Z" fill="url(#flameGradR)"/>
+                </svg>
+            </div>
         </header>
 
         <div class="tabs">
@@ -439,19 +530,19 @@
                 <h2 class="section-title">Server Information</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="name">Server Name</label>
+                        <label for="name">Server Name <span class="help" data-tooltip="Sets the name of the server as shown in the server browser.">?</span></label>
                         <input type="text" id="name" placeholder="Enter server name">
                     </div>
                     <div class="form-group">
-                        <label for="ip">IP Address</label>
+                        <label for="ip">IP Address <span class="help" data-tooltip="IP address to bind to. Use 0.0.0.0 to listen on all interfaces.">?</span></label>
                         <input type="text" id="ip" placeholder="0.0.0.0">
                     </div>
                     <div class="form-group">
-                        <label for="queryPort">Query Port</label>
+                        <label for="queryPort">Query Port <span class="help" data-tooltip="Port used for server queries. Forward this UDP port on your router/firewall.">?</span></label>
                         <input type="number" id="queryPort" min="1024" max="65535">
                     </div>
                     <div class="form-group">
-                        <label for="slotCount">Player Slots</label>
+                        <label for="slotCount">Player Slots <span class="help" data-tooltip="Maximum number of concurrent players that can join (1–16).">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="slotCount" min="1" max="16" value="16" oninput="updateSliderValue('slotCount')">
@@ -466,21 +557,21 @@
                 <h2 class="section-title">Communication Settings</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Enable Text Chat</label>
+                        <label>Enable Text Chat <span class="help" data-tooltip="Enables in‑game text chat for all connected players.">?</span></label>
                         <label class="toggle-switch">
                             <input type="checkbox" id="enableTextChat">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
                     <div class="form-group">
-                        <label>Enable Voice Chat</label>
+                        <label>Enable Voice Chat <span class="help" data-tooltip="Enables in‑game voice chat. Configure mode below.">?</span></label>
                         <label class="toggle-switch">
                             <input type="checkbox" id="enableVoiceChat">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
                     <div class="form-group">
-                        <label for="voiceChatMode">Voice Chat Mode</label>
+                        <label for="voiceChatMode">Voice Chat Mode <span class="help" data-tooltip="Choose how voice chat works: Proximity (nearby players) or Global (entire server).">?</span></label>
                         <select id="voiceChatMode">
                             <option value="Proximity">Proximity</option>
                             <option value="Global">Global</option>
@@ -493,7 +584,7 @@
                 <h2 class="section-title">Game Preset</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="gameSettingsPreset">Difficulty Preset</label>
+                        <label for="gameSettingsPreset">Difficulty Preset <span class="help" data-tooltip="Select a preset for gameplay. Choose Custom to tweak individual settings below.">?</span></label>
                         <p class="label-description">Select a preset or choose Custom for manual configuration</p>
                         <select id="gameSettingsPreset" onchange="handlePresetChange()">
                             <option value="Default">Default</option>
@@ -513,7 +604,7 @@
                 <h2 class="section-title">Player Stats</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="playerHealthFactor">Health (25% - 400%)</label>
+                        <label for="playerHealthFactor">Health (25% - 400%) <span class="help" data-tooltip="Scales players’ maximum health by the factor. Minimum = 0.25.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="playerHealthFactor" min="0.25" max="4" step="0.25" value="1" oninput="updateSliderValue('playerHealthFactor', '%')">
@@ -522,7 +613,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="playerManaFactor">Mana (25% - 400%)</label>
+                        <label for="playerManaFactor">Mana (25% - 400%) <span class="help" data-tooltip="Scales players’ maximum mana by the factor. Minimum = 0.25.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="playerManaFactor" min="0.25" max="4" step="0.25" value="1" oninput="updateSliderValue('playerManaFactor', '%')">
@@ -531,7 +622,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="playerStaminaFactor">Stamina (25% - 400%)</label>
+                        <label for="playerStaminaFactor">Stamina (25% - 400%) <span class="help" data-tooltip="Scales players’ maximum stamina by the factor. Minimum = 0.25.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="playerStaminaFactor" min="0.25" max="4" step="0.25" value="1" oninput="updateSliderValue('playerStaminaFactor', '%')">
@@ -540,7 +631,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="playerBodyHeatFactor">Body Heat (50% - 200%)</label>
+                        <label for="playerBodyHeatFactor">Body Heat (50% - 200%) <span class="help" data-tooltip="Scales resistance to cold. Higher = longer before hypothermia in cold areas.">?</span></label>
                         <p class="label-description">Resistance to cold weather</p>
                         <div class="slider-container">
                             <div class="slider-wrapper">
@@ -556,21 +647,21 @@
                 <h2 class="section-title">Survival Mechanics</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Enable Weapon Durability</label>
+                        <label>Enable Weapon Durability <span class="help" data-tooltip="If enabled, weapons can degrade and break and must be repaired or replaced.">?</span></label>
                         <label class="toggle-switch">
                             <input type="checkbox" id="enableDurability">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
                     <div class="form-group">
-                        <label>Enable Hunger & Starvation</label>
+                        <label>Enable Hunger & Starvation <span class="help" data-tooltip="If enabled, hunger/starvation apply. During starvation, health drains periodically until death if not fed.">?</span></label>
                         <label class="toggle-switch">
                             <input type="checkbox" id="enableStarvingDebuff">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
                     <div class="form-group">
-                        <label for="foodBuffDurationFactor">Food Buff Duration (50% - 200%)</label>
+                        <label for="foodBuffDurationFactor">Food Buff Duration (50% - 200%) <span class="help" data-tooltip="Scales how long food buffs last. Minimum = 0.5.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="foodBuffDurationFactor" min="0.5" max="2" step="0.1" value="1" oninput="updateSliderValue('foodBuffDurationFactor', '%')">
@@ -579,7 +670,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="fromHungerToStarving">Hungry Duration (minutes)</label>
+                        <label for="fromHungerToStarving">Hungry Duration (minutes) <span class="help" data-tooltip="Length of the hungry state before starvation begins. Stored as nanoseconds in enshrouded_server.json (300e9 – 1.2e12).">?</span></label>
                         <p class="label-description">Time before starvation (5-20 min)</p>
                         <div class="slider-container">
                             <div class="slider-wrapper">
@@ -589,7 +680,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="shroudTimeFactor">Shroud Time (50% - 200%)</label>
+                        <label for="shroudTimeFactor">Shroud Time (50% - 200%) <span class="help" data-tooltip="Scales how long players can safely remain within the Shroud.">?</span></label>
                         <p class="label-description">How long you can stay in the Shroud</p>
                         <div class="slider-container">
                             <div class="slider-wrapper">
@@ -599,7 +690,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="tombstoneMode">Tombstone Mode</label>
+                        <label for="tombstoneMode">Tombstone Mode <span class="help" data-tooltip="Controls item loss on death. AddBackpackMaterials: lose materials only; Everything: lose all; NoTombstone: keep everything. Lost items appear in a tombstone and can be recovered.">?</span></label>
                         <p class="label-description">What happens when you die</p>
                         <select id="tombstoneMode">
                             <option value="AddBackpackMaterials">Lose Materials Only</option>
@@ -608,7 +699,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="curseModifier">Shroud Curse Difficulty</label>
+                        <label for="curseModifier">Shroud Curse Difficulty <span class="help" data-tooltip="Adjusts the likelihood/severity of Shroud curses encountered in cursed areas.">?</span></label>
                         <select id="curseModifier">
                             <option value="Easy">Easy (Disabled)</option>
                             <option value="Normal">Normal</option>
@@ -622,7 +713,7 @@
                 <h2 class="section-title">Experience Gain</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="experienceCombatFactor">Combat XP (25% - 200%)</label>
+                        <label for="experienceCombatFactor">Combat XP (25% - 200%) <span class="help" data-tooltip="Scales XP gained from combat. Minimum = 0.25.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="experienceCombatFactor" min="0.25" max="2" step="0.25" value="1" oninput="updateSliderValue('experienceCombatFactor', '%')">
@@ -631,7 +722,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="experienceMiningFactor">Mining XP (0% - 200%)</label>
+                        <label for="experienceMiningFactor">Mining XP (0% - 200%) <span class="help" data-tooltip="Scales XP gained from mining resources.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="experienceMiningFactor" min="0" max="2" step="0.25" value="1" oninput="updateSliderValue('experienceMiningFactor', '%')">
@@ -640,7 +731,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="experienceExplorationQuestsFactor">Exploration/Quest XP (25% - 200%)</label>
+                        <label for="experienceExplorationQuestsFactor">Exploration/Quest XP (25% - 200%) <span class="help" data-tooltip="Scales XP gained from exploration and completing quests. Minimum = 0.25.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="experienceExplorationQuestsFactor" min="0.25" max="2" step="0.25" value="1" oninput="updateSliderValue('experienceExplorationQuestsFactor', '%')">
@@ -658,7 +749,7 @@
                 <h2 class="section-title">Day/Night Cycle</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="dayTimeDuration">Daytime Duration (minutes)</label>
+                        <label for="dayTimeDuration">Daytime Duration (minutes) <span class="help" data-tooltip="Length of daytime. Stored as nanoseconds in enshrouded_server.json (120e9 – 3.6e12). Smaller value = shorter day.">?</span></label>
                         <p class="label-description">2-60 minutes</p>
                         <div class="slider-container">
                             <div class="slider-wrapper">
@@ -668,7 +759,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="nightTimeDuration">Nighttime Duration (minutes)</label>
+                        <label for="nightTimeDuration">Nighttime Duration (minutes) <span class="help" data-tooltip="Length of nighttime. Stored as nanoseconds in enshrouded_server.json (120e9 – 3.6e12). Smaller value = shorter night.">?</span></label>
                         <p class="label-description">2-60 minutes</p>
                         <div class="slider-container">
                             <div class="slider-wrapper">
@@ -684,7 +775,7 @@
                 <h2 class="section-title">Weather & Environment</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="weatherFrequency">Weather Frequency</label>
+                        <label for="weatherFrequency">Weather Frequency <span class="help" data-tooltip="Controls how often weather events occur: Disabled, Rare, Normal, Often.">?</span></label>
                         <select id="weatherFrequency">
                             <option value="Disabled">Disabled</option>
                             <option value="Rare">Rare</option>
@@ -693,7 +784,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Enable Glider Turbulences</label>
+                        <label>Enable Glider Turbulences <span class="help" data-tooltip="If enabled, gliders experience turbulence and wind effects.">?</span></label>
                         <label class="toggle-switch">
                             <input type="checkbox" id="enableGliderTurbulences">
                             <span class="toggle-slider"></span>
@@ -706,7 +797,7 @@
                 <h2 class="section-title">Wildlife</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="tamingStartleRepercussion">Taming Failure Penalty</label>
+                        <label for="tamingStartleRepercussion">Taming Failure Penalty <span class="help" data-tooltip="Penalty applied when a tame is startled/failed: Keep Progress, Lose Some Progress, or Lose All Progress.">?</span></label>
                         <select id="tamingStartleRepercussion">
                             <option value="KeepProgress">Keep Progress</option>
                             <option value="LoseSomeProgress">Lose Some Progress</option>
@@ -723,7 +814,7 @@
                 <h2 class="section-title">Enemy Spawning</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="randomSpawnerAmount">Enemy Amount</label>
+                        <label for="randomSpawnerAmount">Enemy Amount <span class="help" data-tooltip="Sets the overall amount of enemies present in the world (Few → Extreme).">?</span></label>
                         <select id="randomSpawnerAmount">
                             <option value="Few">Few</option>
                             <option value="Normal">Normal</option>
@@ -732,7 +823,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="aggroPoolAmount">Simultaneous Attackers</label>
+                        <label for="aggroPoolAmount">Simultaneous Attackers <span class="help" data-tooltip="Sets how many enemies are allowed to attack a player at once.">?</span></label>
                         <select id="aggroPoolAmount">
                             <option value="Few">Few</option>
                             <option value="Normal">Normal</option>
@@ -741,7 +832,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Pacify All Enemies</label>
+                        <label>Pacify All Enemies <span class="help" data-tooltip="If enabled, enemies will not attack unless provoked.">?</span></label>
                         <p class="label-description">Enemies won't attack unless provoked</p>
                         <label class="toggle-switch">
                             <input type="checkbox" id="pacifyAllEnemies">
@@ -755,7 +846,7 @@
                 <h2 class="section-title">Regular Enemy Stats</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="enemyDamageFactor">Enemy Damage (25% - 500%)</label>
+                        <label for="enemyDamageFactor">Enemy Damage (25% - 500%) <span class="help" data-tooltip="Scales damage dealt by regular enemies (not bosses). Minimum = 0.25.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="enemyDamageFactor" min="0.25" max="5" step="0.25" value="1" oninput="updateSliderValue('enemyDamageFactor', '%')">
@@ -764,7 +855,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="enemyHealthFactor">Enemy Health (25% - 400%)</label>
+                        <label for="enemyHealthFactor">Enemy Health (25% - 400%) <span class="help" data-tooltip="Scales health of regular enemies (not bosses). Minimum = 0.25.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="enemyHealthFactor" min="0.25" max="4" step="0.25" value="1" oninput="updateSliderValue('enemyHealthFactor', '%')">
@@ -773,7 +864,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="enemyStaminaFactor">Enemy Stamina (50% - 200%)</label>
+                        <label for="enemyStaminaFactor">Enemy Stamina (50% - 200%) <span class="help" data-tooltip="Scales enemy stamina. Higher values make enemies harder to stun. Minimum = 0.5.">?</span></label>
                         <p class="label-description">Higher = harder to stun</p>
                         <div class="slider-container">
                             <div class="slider-wrapper">
@@ -783,7 +874,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="enemyPerceptionRangeFactor">Enemy Perception (50% - 200%)</label>
+                        <label for="enemyPerceptionRangeFactor">Enemy Perception (50% - 200%) <span class="help" data-tooltip="Scales how far regular enemies can see and hear a player. Minimum = 0.5.">?</span></label>
                         <p class="label-description">How far enemies can see/hear</p>
                         <div class="slider-container">
                             <div class="slider-wrapper">
@@ -793,7 +884,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="threatBonus">Attack Frequency (25% - 400%)</label>
+                        <label for="threatBonus">Attack Frequency (25% - 400%) <span class="help" data-tooltip="Scales how frequently enemies attack or gain aggro pressure. Higher = more frequent pressure.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="threatBonus" min="0.25" max="4" step="0.25" value="1" oninput="updateSliderValue('threatBonus', '%')">
@@ -808,7 +899,7 @@
                 <h2 class="section-title">Boss Stats</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="bossDamageFactor">Boss Damage (20% - 500%)</label>
+                        <label for="bossDamageFactor">Boss Damage (20% - 500%) <span class="help" data-tooltip="Scales damage dealt by bosses. Minimum = 0.2.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="bossDamageFactor" min="0.2" max="5" step="0.2" value="1" oninput="updateSliderValue('bossDamageFactor', '%')">
@@ -817,7 +908,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="bossHealthFactor">Boss Health (20% - 500%)</label>
+                        <label for="bossHealthFactor">Boss Health (20% - 500%) <span class="help" data-tooltip="Scales health of bosses. Minimum = 0.2.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="bossHealthFactor" min="0.2" max="5" step="0.2" value="1" oninput="updateSliderValue('bossHealthFactor', '%')">
@@ -835,7 +926,7 @@
                 <h2 class="section-title">Resource Gathering</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="miningDamageFactor">Mining Effectiveness (50% - 200%)</label>
+                        <label for="miningDamageFactor">Mining Effectiveness (50% - 200%) <span class="help" data-tooltip="Scales mining damage and yield per hit (also affects terraforming).">?</span></label>
                         <p class="label-description">Damage and yield per hit</p>
                         <div class="slider-container">
                             <div class="slider-wrapper">
@@ -845,7 +936,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="resourceDropStackAmountFactor">Resource Gain (25% - 200%)</label>
+                        <label for="resourceDropStackAmountFactor">Resource Gain (25% - 200%) <span class="help" data-tooltip="Scales materials gained per loot stack from drops and containers.">?</span></label>
                         <p class="label-description">Materials per loot stack</p>
                         <div class="slider-container">
                             <div class="slider-wrapper">
@@ -861,7 +952,7 @@
                 <h2 class="section-title">Production & Farming</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="plantGrowthSpeedFactor">Plant Growth Speed (25% - 200%)</label>
+                        <label for="plantGrowthSpeedFactor">Plant Growth Speed (25% - 200%) <span class="help" data-tooltip="Scales how quickly planted crops grow.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="plantGrowthSpeedFactor" min="0.25" max="2" step="0.25" value="1" oninput="updateSliderValue('plantGrowthSpeedFactor', '%')">
@@ -870,7 +961,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="factoryProductionSpeedFactor">Workstation Speed (25% - 200%)</label>
+                        <label for="factoryProductionSpeedFactor">Workstation Speed (25% - 200%) <span class="help" data-tooltip="Scales production times for workshop items. Minimum = 0.25.">?</span></label>
                         <div class="slider-container">
                             <div class="slider-wrapper">
                                 <input type="range" id="factoryProductionSpeedFactor" min="0.25" max="2" step="0.25" value="1" oninput="updateSliderValue('factoryProductionSpeedFactor', '%')">
@@ -885,7 +976,7 @@
                 <h2 class="section-title">Weapon Upgrades</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="perkCostFactor">Upgrade Cost (25% - 200%)</label>
+                        <label for="perkCostFactor">Upgrade Cost (25% - 200%) <span class="help" data-tooltip="Scales Rune cost required for upgrading weapons. Minimum = 0.25.">?</span></label>
                         <p class="label-description">Runes required for upgrades</p>
                         <div class="slider-container">
                             <div class="slider-wrapper">
@@ -895,7 +986,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="perkUpgradeRecyclingFactor">Recycling Yield (0% - 100%)</label>
+                        <label for="perkUpgradeRecyclingFactor">Recycling Yield (0% - 100%) <span class="help" data-tooltip="Scales Runes returned when salvaging upgraded weapons.">?</span></label>
                         <p class="label-description">Runes returned when salvaging</p>
                         <div class="slider-container">
                             <div class="slider-wrapper">
@@ -959,6 +1050,78 @@
 
     <script>
         let config = {};
+
+        // Initialize tooltips that clamp to the viewport and wrap as needed
+        (function () {
+            const margin = 12;
+            let active = null;
+
+            function positionTooltip(helpEl, tipEl) {
+                const rect = helpEl.getBoundingClientRect();
+                tipEl.style.display = 'block';
+                tipEl.style.visibility = 'hidden';
+
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+
+                const tipW = tipEl.offsetWidth;
+                const tipH = tipEl.offsetHeight;
+
+                let top = rect.top - tipH - 10; // prefer above
+                if (top < margin) {
+                    top = rect.bottom + 10; // flip below if not enough space
+                }
+
+                let left = rect.left + (rect.width / 2) - (tipW / 2);
+                if (left < margin) left = margin;
+                if (left + tipW > vw - margin) left = Math.max(margin, vw - margin - tipW);
+
+                // Clamp vertical if needed
+                if (top + tipH > vh - margin) top = Math.max(margin, vh - margin - tipH);
+
+                // Fixed positioning uses viewport coordinates
+                tipEl.style.top = Math.round(top) + 'px';
+                tipEl.style.left = Math.round(left) + 'px';
+
+                tipEl.style.visibility = 'visible';
+                tipEl.style.opacity = '1';
+            }
+
+            function attachTooltip(helpEl) {
+                const tipEl = document.createElement('span');
+                tipEl.className = 'tooltip';
+                tipEl.textContent = helpEl.dataset.tooltip || '';
+                document.body.appendChild(tipEl);
+
+                const open = () => {
+                    active = { helpEl, tipEl };
+                    positionTooltip(helpEl, tipEl);
+                };
+                const close = () => {
+                    if (active && active.tipEl === tipEl) active = null;
+                    tipEl.style.opacity = '0';
+                    tipEl.style.visibility = 'hidden';
+                    tipEl.style.display = 'none';
+                };
+
+                helpEl.setAttribute('tabindex', '0');
+                helpEl.addEventListener('mouseenter', open);
+                helpEl.addEventListener('focus', open);
+                helpEl.addEventListener('mouseleave', close);
+                helpEl.addEventListener('blur', close);
+
+                window.addEventListener('scroll', () => {
+                    if (active && active.tipEl === tipEl) positionTooltip(helpEl, tipEl);
+                }, { passive: true });
+                window.addEventListener('resize', () => {
+                    if (active && active.tipEl === tipEl) positionTooltip(helpEl, tipEl);
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('.help').forEach(attachTooltip);
+            });
+        })();
 
         // Switch between tabs
         function switchTab(tabName) {
