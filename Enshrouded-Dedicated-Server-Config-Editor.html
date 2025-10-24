@@ -1088,6 +1088,9 @@
                             <option value="Relaxed">Relaxed</option>
                             <option value="Hard">Hard</option>
                             <option value="Survival">Survival</option>
+                            <option value="Creative">Creative</option>
+                            <option value="Hardcore">Hardcore</option>
+                            <option value="Speedrun">Speedrun</option>
                             <option value="Custom">Custom</option>
                         </select>
                     </div>
@@ -1665,7 +1668,13 @@
             if (preset !== 'Custom') {
                 if (confirm(`Switching to ${preset} preset will override your custom settings. Continue?`)) {
                     applyPreset(preset);
+                } else {
+                    // Revert to previous selection if user cancels
+                    document.getElementById('gameSettingsPreset').value = config.gameSettingsPreset || 'Default';
                 }
+            } else {
+                // User selected Custom, update the config
+                config.gameSettingsPreset = 'Custom';
             }
         }
 
@@ -1689,11 +1698,120 @@
                     pacifyAllEnemies: false, tamingStartleRepercussion: 'LoseSomeProgress',
                     dayTimeDuration: 1800000000000, nightTimeDuration: 720000000000,
                     curseModifier: 'Normal'
+                },
+                'Relaxed': {
+                    playerHealthFactor: 2, playerManaFactor: 1, playerStaminaFactor: 1,
+                    playerBodyHeatFactor: 1, enableDurability: true, enableStarvingDebuff: false,
+                    foodBuffDurationFactor: 1, fromHungerToStarving: 600000000000,
+                    shroudTimeFactor: 1, tombstoneMode: 'AddBackpackMaterials',
+                    enableGliderTurbulences: true, weatherFrequency: 'Normal',
+                    miningDamageFactor: 1, plantGrowthSpeedFactor: 2,
+                    resourceDropStackAmountFactor: 1, factoryProductionSpeedFactor: 2,
+                    perkUpgradeRecyclingFactor: 0.5, perkCostFactor: 1,
+                    experienceCombatFactor: 1, experienceMiningFactor: 1,
+                    experienceExplorationQuestsFactor: 1, randomSpawnerAmount: 'Few',
+                    aggroPoolAmount: 'Few', enemyDamageFactor: 0.5, enemyHealthFactor: 0.5,
+                    enemyStaminaFactor: 1, enemyPerceptionRangeFactor: 1,
+                    bossDamageFactor: 0.5, bossHealthFactor: 0.5, threatBonus: 1,
+                    pacifyAllEnemies: false, tamingStartleRepercussion: 'LoseSomeProgress',
+                    dayTimeDuration: 1800000000000, nightTimeDuration: 720000000000,
+                    curseModifier: 'Normal'
+                },
+                'Hard': {
+                    playerHealthFactor: 1, playerManaFactor: 1, playerStaminaFactor: 1,
+                    playerBodyHeatFactor: 1, enableDurability: true, enableStarvingDebuff: false,
+                    foodBuffDurationFactor: 1, fromHungerToStarving: 600000000000,
+                    shroudTimeFactor: 1, tombstoneMode: 'AddBackpackMaterials',
+                    enableGliderTurbulences: true, weatherFrequency: 'Normal',
+                    miningDamageFactor: 1, plantGrowthSpeedFactor: 1,
+                    resourceDropStackAmountFactor: 1, factoryProductionSpeedFactor: 1,
+                    perkUpgradeRecyclingFactor: 0.5, perkCostFactor: 1,
+                    experienceCombatFactor: 1, experienceMiningFactor: 1,
+                    experienceExplorationQuestsFactor: 1, randomSpawnerAmount: 'Many',
+                    aggroPoolAmount: 'Many', enemyDamageFactor: 1.5, enemyHealthFactor: 1,
+                    enemyStaminaFactor: 1, enemyPerceptionRangeFactor: 1,
+                    bossDamageFactor: 1.5, bossHealthFactor: 1, threatBonus: 1,
+                    pacifyAllEnemies: false, tamingStartleRepercussion: 'LoseSomeProgress',
+                    dayTimeDuration: 1800000000000, nightTimeDuration: 720000000000,
+                    curseModifier: 'Normal'
+                },
+                'Survival': {
+                    playerHealthFactor: 0.75, playerManaFactor: 1, playerStaminaFactor: 1,
+                    playerBodyHeatFactor: 1, enableDurability: true, enableStarvingDebuff: true,
+                    foodBuffDurationFactor: 1, fromHungerToStarving: 600000000000,
+                    shroudTimeFactor: 1, tombstoneMode: 'AddBackpackMaterials',
+                    enableGliderTurbulences: true, weatherFrequency: 'Normal',
+                    miningDamageFactor: 1, plantGrowthSpeedFactor: 1,
+                    resourceDropStackAmountFactor: 1, factoryProductionSpeedFactor: 1,
+                    perkUpgradeRecyclingFactor: 0.5, perkCostFactor: 1,
+                    experienceCombatFactor: 1, experienceMiningFactor: 1,
+                    experienceExplorationQuestsFactor: 1, randomSpawnerAmount: 'Many',
+                    aggroPoolAmount: 'Many', enemyDamageFactor: 1.5, enemyHealthFactor: 1,
+                    enemyStaminaFactor: 1, enemyPerceptionRangeFactor: 1,
+                    bossDamageFactor: 1.5, bossHealthFactor: 1, threatBonus: 1,
+                    pacifyAllEnemies: false, tamingStartleRepercussion: 'LoseSomeProgress',
+                    dayTimeDuration: 1800000000000, nightTimeDuration: 720000000000,
+                    curseModifier: 'Hard'
+                },
+                'Creative': {
+                    playerHealthFactor: 4, playerManaFactor: 4, playerStaminaFactor: 4,
+                    playerBodyHeatFactor: 2, enableDurability: false, enableStarvingDebuff: false,
+                    foodBuffDurationFactor: 2, fromHungerToStarving: 600000000000,
+                    shroudTimeFactor: 4, tombstoneMode: 'NoTombstone',
+                    enableGliderTurbulences: false, weatherFrequency: 'Rare',
+                    miningDamageFactor: 4, plantGrowthSpeedFactor: 4,
+                    resourceDropStackAmountFactor: 4, factoryProductionSpeedFactor: 4,
+                    perkUpgradeRecyclingFactor: 1, perkCostFactor: 0.25,
+                    experienceCombatFactor: 4, experienceMiningFactor: 4,
+                    experienceExplorationQuestsFactor: 4, randomSpawnerAmount: 'Few',
+                    aggroPoolAmount: 'Few', enemyDamageFactor: 0.25, enemyHealthFactor: 0.25,
+                    enemyStaminaFactor: 0.5, enemyPerceptionRangeFactor: 0.5,
+                    bossDamageFactor: 0.25, bossHealthFactor: 0.25, threatBonus: 0.25,
+                    pacifyAllEnemies: false, tamingStartleRepercussion: 'NoRepercussion',
+                    dayTimeDuration: 2400000000000, nightTimeDuration: 480000000000,
+                    curseModifier: 'Easy'
+                },
+                'Hardcore': {
+                    playerHealthFactor: 0.5, playerManaFactor: 0.75, playerStaminaFactor: 0.75,
+                    playerBodyHeatFactor: 0.5, enableDurability: true, enableStarvingDebuff: true,
+                    foodBuffDurationFactor: 0.5, fromHungerToStarving: 300000000000,
+                    shroudTimeFactor: 0.5, tombstoneMode: 'Everything',
+                    enableGliderTurbulences: true, weatherFrequency: 'Often',
+                    miningDamageFactor: 0.75, plantGrowthSpeedFactor: 0.5,
+                    resourceDropStackAmountFactor: 0.75, factoryProductionSpeedFactor: 0.75,
+                    perkUpgradeRecyclingFactor: 0.25, perkCostFactor: 2,
+                    experienceCombatFactor: 0.75, experienceMiningFactor: 0.75,
+                    experienceExplorationQuestsFactor: 0.75, randomSpawnerAmount: 'Extreme',
+                    aggroPoolAmount: 'Extreme', enemyDamageFactor: 2, enemyHealthFactor: 1.5,
+                    enemyStaminaFactor: 1.5, enemyPerceptionRangeFactor: 1.5,
+                    bossDamageFactor: 2, bossHealthFactor: 2, threatBonus: 2,
+                    pacifyAllEnemies: false, tamingStartleRepercussion: 'LoseAllProgress',
+                    dayTimeDuration: 1200000000000, nightTimeDuration: 1080000000000,
+                    curseModifier: 'Hard'
+                },
+                'Speedrun': {
+                    playerHealthFactor: 1.5, playerManaFactor: 1.5, playerStaminaFactor: 1.5,
+                    playerBodyHeatFactor: 1.5, enableDurability: true, enableStarvingDebuff: false,
+                    foodBuffDurationFactor: 2, fromHungerToStarving: 600000000000,
+                    shroudTimeFactor: 2, tombstoneMode: 'AddBackpackMaterials',
+                    enableGliderTurbulences: false, weatherFrequency: 'Rare',
+                    miningDamageFactor: 3, plantGrowthSpeedFactor: 3,
+                    resourceDropStackAmountFactor: 2, factoryProductionSpeedFactor: 3,
+                    perkUpgradeRecyclingFactor: 0.75, perkCostFactor: 0.5,
+                    experienceCombatFactor: 2, experienceMiningFactor: 2,
+                    experienceExplorationQuestsFactor: 2, randomSpawnerAmount: 'Normal',
+                    aggroPoolAmount: 'Normal', enemyDamageFactor: 0.75, enemyHealthFactor: 0.75,
+                    enemyStaminaFactor: 1, enemyPerceptionRangeFactor: 1,
+                    bossDamageFactor: 1, bossHealthFactor: 1, threatBonus: 1,
+                    pacifyAllEnemies: false, tamingStartleRepercussion: 'LoseSomeProgress',
+                    dayTimeDuration: 1800000000000, nightTimeDuration: 720000000000,
+                    curseModifier: 'Normal'
                 }
             };
 
             if (presets[preset]) {
                 Object.assign(config.gameSettings, presets[preset]);
+                config.gameSettingsPreset = preset;
                 loadConfigToUI();
                 showNotification(`${preset} preset applied!`);
             }
