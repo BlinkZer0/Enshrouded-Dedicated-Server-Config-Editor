@@ -17,6 +17,9 @@
             --bg-light: #3d3028;
             --accent-gold: #d4af37;
             --accent-orange: #e67e22;
+            --accent-cyan: #4dd0e1;
+            --accent-teal: #26a69a;
+            --accent-silver: #b8c5d6;
             --text-light: #f4e4d0;
             --text-dim: #b8a590;
             --border-color: #5a4a38;
@@ -29,6 +32,108 @@
             color: var(--text-light);
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background gradient */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1510 0%, #2a211a 50%, #1a1510 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 15s ease infinite;
+            z-index: -2;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Particle container */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatUp 8s ease-in infinite;
+            box-shadow: 0 0 6px var(--accent-gold);
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(50px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Smoke particles from torches */
+        .smoke-particle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, rgba(180, 180, 180, 0.5) 0%, rgba(120, 120, 120, 0.2) 40%, rgba(100, 100, 100, 0) 70%);
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            filter: blur(4px);
+            will-change: transform, opacity;
+        }
+
+        @keyframes smokeRise {
+            0% {
+                transform: translateY(0) translateX(0) scale(0.3);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 0.5;
+                transform: translateY(-80px) translateX(20px) scale(2.5);
+            }
+            100% {
+                transform: translateY(-160px) translateX(40px) scale(4);
+                opacity: 0;
+            }
+        }
+
+        .torch-smoke-container {
+            position: absolute;
+            width: 100%;
+            height: 200px;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: visible;
+            z-index: 1;
         }
 
         .container {
@@ -45,13 +150,41 @@
             border: 2px solid var(--border-color);
             box-shadow: 0 10px 30px var(--shadow);
             position: relative;
+            overflow: visible;
         }
 
         h1 {
             font-size: 2.5em;
-            color: var(--accent-gold);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            color: var(--accent-cyan);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7),
+                         0 0 20px rgba(77, 208, 225, 0.5);
             margin-bottom: 10px;
+            animation: titlePulse 8s ease-in-out infinite;
+            background: linear-gradient(90deg,
+                #4dd0e1 0%,
+                #80deea 25%,
+                #b8c5d6 50%,
+                #80deea 75%,
+                #4dd0e1 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titlePulse 8s ease-in-out infinite, shimmer 6s linear infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(77, 208, 225, 0.6));
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(77, 208, 225, 0.9)) drop-shadow(0 0 30px rgba(38, 166, 154, 0.5));
+            }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
         }
 
         .subtitle {
@@ -63,21 +196,62 @@
         .torch {
             position: absolute;
             top: 8px;
-            width: 64px;
-            height: 120px;
-            filter: drop-shadow(0 0 6px rgba(230, 126, 34, 0.6));
+            width: 80px;
+            height: 140px;
             opacity: 0.95;
+            overflow: visible;
         }
-        .torch-left { left: -10px; }
-        .torch-right { right: -10px; transform: scaleX(-1); }
+        .torch svg {
+            overflow: visible;
+        }
+        .torch-left { left: -20px; }
+        .torch-right { right: -20px; transform: scaleX(-1); }
 
         @keyframes flameFlicker {
-            0%   { transform: translateY(0) scale(1);   filter: drop-shadow(0 0 6px rgba(212,175,55,0.6)); }
-            50%  { transform: translateY(-2px) scale(1.05); filter: drop-shadow(0 0 12px rgba(230,126,34,0.9)); }
-            100% { transform: translateY(0) scale(0.98); filter: drop-shadow(0 0 6px rgba(212,175,55,0.6)); }
+            0%   {
+                transform: translateY(0) scale(1);
+            }
+            25%  {
+                transform: translateY(-3px) scale(1.08) rotate(2deg);
+            }
+            50%  {
+                transform: translateY(-2px) scale(1.05) rotate(-2deg);
+            }
+            75%  {
+                transform: translateY(-4px) scale(1.1) rotate(1deg);
+            }
+            100% {
+                transform: translateY(0) scale(0.98) rotate(-1deg);
+            }
         }
-        .torch .flame-primary { animation: flameFlicker 1.35s ease-in-out infinite alternate; transform-origin: 50% 100%; }
-        .torch .flame-secondary { animation: flameFlicker 1.8s ease-in-out infinite alternate; transform-origin: 50% 100%; opacity: 0.85; }
+
+        @keyframes flameGlow {
+            0%, 100% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .torch .flame-primary {
+            animation: flameFlicker 1.35s ease-in-out infinite alternate;
+            transform-origin: 50% 100%;
+            filter: blur(0.5px);
+        }
+        .torch .flame-secondary {
+            animation: flameFlicker 1.8s ease-in-out infinite alternate;
+            transform-origin: 50% 100%;
+            opacity: 0.7;
+            filter: blur(1px);
+        }
+
+        .torch .flame-glow {
+            animation: flameFlicker 2s ease-in-out infinite alternate, flameGlow 1.5s ease-in-out infinite;
+            transform-origin: 50% 100%;
+            opacity: 0.4;
+            filter: blur(8px);
+        }
 
         .tabs {
             display: flex;
@@ -93,21 +267,52 @@
             border-radius: 8px;
             color: var(--text-light);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 1em;
             font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .tab-button:active::before {
+            width: 300px;
+            height: 300px;
         }
 
         .tab-button:hover {
             background: var(--bg-light);
             border-color: var(--accent-gold);
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
         }
 
         .tab-button.active {
             background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-gold) 100%);
             border-color: var(--accent-gold);
             color: var(--bg-dark);
+            animation: tabGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes tabGlow {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
+            }
         }
 
         .tab-content {
@@ -121,16 +326,41 @@
 
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.3s;
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .form-section {
             margin-bottom: 30px;
+            opacity: 0;
+            animation: sectionFadeIn 0.6s ease-out forwards;
+        }
+
+        .form-section:nth-child(1) { animation-delay: 0.1s; }
+        .form-section:nth-child(2) { animation-delay: 0.2s; }
+        .form-section:nth-child(3) { animation-delay: 0.3s; }
+        .form-section:nth-child(4) { animation-delay: 0.4s; }
+        .form-section:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes sectionFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .section-title {
@@ -186,15 +416,20 @@
             background: var(--bg-dark);
             color: var(--text-light);
             padding: 10px 12px;
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--accent-gold);
             border-radius: 8px;
-            box-shadow: 0 8px 20px var(--shadow);
+            box-shadow: 0 8px 20px var(--shadow), 0 0 15px rgba(212, 175, 55, 0.3);
             max-width: 340px;
             white-space: normal;
             word-break: break-word;
             hyphens: auto;
             z-index: 1000;
-            transition: opacity 0.15s ease;
+            transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transform: scale(0.8);
+        }
+
+        .tooltip[style*="opacity: 1"] {
+            transform: scale(1);
         }
 
         .label-description {
@@ -213,7 +448,15 @@
             border-radius: 8px;
             color: var(--text-light);
             font-size: 1em;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        input[type="text"]:hover,
+        input[type="number"]:hover,
+        select:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            transform: translateY(-1px);
         }
 
         input[type="text"]:focus,
@@ -221,7 +464,9 @@
         select:focus {
             outline: none;
             border-color: var(--accent-gold);
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4),
+                        inset 0 0 10px rgba(212, 175, 55, 0.1);
+            transform: scale(1.02);
         }
 
         select {
@@ -248,10 +493,41 @@
         input[type="range"] {
             flex: 1;
             height: 8px;
-            background: var(--bg-dark);
+            background: linear-gradient(to right,
+                var(--accent-orange) 0%,
+                var(--accent-gold) var(--range-progress, 50%),
+                var(--bg-dark) var(--range-progress, 50%));
             border-radius: 5px;
             outline: none;
             -webkit-appearance: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        input[type="range"]:hover {
+            height: 10px;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Track styling for webkit */
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 8px;
+            border-radius: 5px;
+            background: transparent;
+        }
+
+        /* Track styling for Firefox */
+        input[type="range"]::-moz-range-track {
+            height: 8px;
+            border-radius: 5px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        input[type="range"]::-moz-range-progress {
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, var(--accent-orange), var(--accent-gold));
         }
 
         input[type="range"]::-webkit-slider-thumb {
@@ -263,12 +539,17 @@
             cursor: pointer;
             border-radius: 50%;
             border: 2px solid var(--border-color);
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            box-shadow: 0 0 10px var(--accent-gold);
+            transform: scale(1.3);
+            box-shadow: 0 0 15px var(--accent-gold), 0 0 30px rgba(212, 175, 55, 0.4);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:active {
+            transform: scale(1.1);
         }
 
         input[type="range"]::-moz-range-thumb {
@@ -278,12 +559,26 @@
             cursor: pointer;
             border-radius: 50%;
             border: 2px solid var(--border-color);
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         input[type="range"]::-moz-range-thumb:hover {
-            transform: scale(1.2);
-            box-shadow: 0 0 10px var(--accent-gold);
+            transform: scale(1.3);
+            box-shadow: 0 0 15px var(--accent-gold), 0 0 30px rgba(212, 175, 55, 0.4);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        input[type="range"]::-moz-range-thumb:active {
+            transform: scale(1.1);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 15px var(--accent-gold), 0 0 30px rgba(212, 175, 55, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 20px var(--accent-gold), 0 0 40px rgba(212, 175, 55, 0.6);
+            }
         }
 
         .slider-value {
@@ -295,6 +590,13 @@
             text-align: center;
             font-weight: 600;
             color: var(--accent-gold);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slider-value.updating {
+            transform: scale(1.15);
+            color: #ffd700;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
         }
 
         .toggle-switch {
@@ -319,8 +621,13 @@
             bottom: 0;
             background-color: var(--bg-dark);
             border: 2px solid var(--border-color);
-            transition: 0.4s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 30px;
+        }
+
+        .toggle-slider:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
         }
 
         .toggle-slider:before {
@@ -331,18 +638,21 @@
             left: 3px;
             bottom: 3px;
             background-color: var(--text-dim);
-            transition: 0.4s;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         input:checked + .toggle-slider {
             background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-gold) 100%);
             border-color: var(--accent-gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
         }
 
         input:checked + .toggle-slider:before {
             transform: translateX(30px);
             background-color: var(--bg-dark);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
         }
 
         .action-buttons {
@@ -360,11 +670,31 @@
             font-size: 1.1em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             gap: 10px;
             box-shadow: 0 5px 15px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 400px;
+            height: 400px;
         }
 
         .btn-primary {
@@ -373,8 +703,14 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5),
+                        0 0 20px rgba(212, 175, 55, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px) scale(1.02);
         }
 
         .btn-secondary {
@@ -386,7 +722,12 @@
         .btn-secondary:hover {
             background: var(--bg-dark);
             border-color: var(--accent-gold);
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(-1px) scale(1.02);
         }
 
         .btn-danger {
@@ -395,8 +736,13 @@
         }
 
         .btn-danger:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .btn-danger:active {
+            transform: translateY(-1px) scale(1.02);
         }
 
         .user-group {
@@ -437,23 +783,58 @@
             font-weight: 600;
             box-shadow: 0 10px 30px var(--shadow);
             z-index: 1000;
-            animation: slideIn 0.3s;
             display: none;
         }
 
         .notification.show {
             display: block;
+            animation: notificationSlideIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(400px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .notification.hide {
+            animation: notificationSlideOut 0.3s ease-in forwards;
+        }
+
+        @keyframes notificationSlideIn {
+            0% {
+                transform: translateX(400px) scale(0.8);
+                opacity: 0;
+            }
+            70% {
+                transform: translateX(-10px) scale(1.05);
+            }
+            100% {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes notificationSlideOut {
+            from {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px) scale(0.8);
+                opacity: 0;
+            }
         }
 
         .svg-icon {
             width: 20px;
             height: 20px;
             fill: currentColor;
+        }
+
+        /* Accessibility: Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
 
         @media (max-width: 768px) {
@@ -475,42 +856,158 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .particle {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Animated particle background -->
+    <div class="particles" id="particles"></div>
+
     <div class="container">
         <header>
+            <div class="torch-smoke-container" id="torchSmoke"></div>
             <div class="torch torch-left" aria-hidden="true">
-                <svg viewBox="0 0 64 120" width="64" height="120" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 80 140" width="80" height="140" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                        <linearGradient id="flameGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#ffd166"/>
-                            <stop offset="60%" stop-color="#ff8c1a"/>
-                            <stop offset="100%" stop-color="#e25822"/>
+                        <!-- Flame gradients -->
+                        <radialGradient id="flameGrad" cx="50%" cy="40%">
+                            <stop offset="0%" stop-color="#fff9e6"/>
+                            <stop offset="20%" stop-color="#ffe066"/>
+                            <stop offset="50%" stop-color="#ff9933"/>
+                            <stop offset="80%" stop-color="#ff6600"/>
+                            <stop offset="100%" stop-color="#cc3300"/>
+                        </radialGradient>
+                        <radialGradient id="flameGlowGrad" cx="50%" cy="50%">
+                            <stop offset="0%" stop-color="#ffcc66" stop-opacity="0.8"/>
+                            <stop offset="50%" stop-color="#ff6600" stop-opacity="0.4"/>
+                            <stop offset="100%" stop-color="#ff3300" stop-opacity="0"/>
+                        </radialGradient>
+                        <!-- Wood grain gradient -->
+                        <linearGradient id="woodGrad" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stop-color="#5a4332"/>
+                            <stop offset="40%" stop-color="#6e543e"/>
+                            <stop offset="60%" stop-color="#5a4332"/>
+                            <stop offset="100%" stop-color="#4a3525"/>
+                        </linearGradient>
+                        <!-- Metal gradient -->
+                        <linearGradient id="metalGrad" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stop-color="#3d3028"/>
+                            <stop offset="50%" stop-color="#5a4a38"/>
+                            <stop offset="100%" stop-color="#3d3028"/>
                         </linearGradient>
                     </defs>
-                    <rect x="28" y="60" width="8" height="50" fill="#5a4a38" stroke="#3d3028"/>
-                    <rect x="18" y="56" width="28" height="6" rx="3" fill="#3d3028" stroke="#5a4a38"/>
-                    <path class="flame-secondary" d="M32 14 C26 26, 22 30, 25 40 C28 50, 36 50, 39 40 C42 30, 38 26, 32 14 Z" fill="url(#flameGrad)"/>
-                    <path class="flame-primary" d="M32 8 C24 22, 20 28, 24 40 C28 54, 36 54, 40 40 C44 28, 40 22, 32 8 Z" fill="url(#flameGrad)"/>
+
+                    <!-- Torch handle (wood stick) -->
+                    <rect x="35" y="70" width="10" height="60" rx="2" fill="url(#woodGrad)" stroke="#3d3028" stroke-width="0.5"/>
+                    <ellipse cx="40" cy="70" rx="5" ry="2" fill="#4a3525"/>
+
+                    <!-- Metal holder -->
+                    <path d="M 25 65 Q 22 68, 25 70 L 30 72 L 30 80 L 25 82 Q 22 84, 25 87 L 55 87 Q 58 84, 55 82 L 50 80 L 50 72 L 55 70 Q 58 68, 55 65 Z"
+                          fill="url(#metalGrad)" stroke="#2a211a" stroke-width="0.8"/>
+                    <ellipse cx="40" cy="65" rx="15" ry="4" fill="#5a4a38" opacity="0.7"/>
+
+                    <!-- Flame glow (largest, most blurred) -->
+                    <ellipse class="flame-glow" cx="40" cy="35" rx="28" ry="38" fill="url(#flameGlowGrad)"/>
+
+                    <!-- Outer flame (secondary) -->
+                    <path class="flame-secondary"
+                          d="M 40 10 C 32 20, 28 28, 28 38 C 28 48, 30 55, 35 60 C 37 62, 40 63, 40 63 C 40 63, 43 62, 45 60 C 50 55, 52 48, 52 38 C 52 28, 48 20, 40 10 Z"
+                          fill="url(#flameGrad)" opacity="0.85"/>
+
+                    <!-- Inner flame (primary, brighter) -->
+                    <path class="flame-primary"
+                          d="M 40 15 C 35 24, 33 30, 33 38 C 33 45, 35 50, 38 55 C 39 56, 40 57, 40 57 C 40 57, 41 56, 42 55 C 45 50, 47 45, 47 38 C 47 30, 45 24, 40 15 Z"
+                          fill="url(#flameGrad)"/>
+
+                    <!-- Hot center -->
+                    <path class="flame-primary"
+                          d="M 40 25 C 38 30, 37 35, 37 40 C 37 44, 38 47, 40 50 C 42 47, 43 44, 43 40 C 43 35, 42 30, 40 25 Z"
+                          fill="#fff9e6" opacity="0.9"/>
+
+                    <!-- Embers rising from flame -->
+                    <circle cx="38" cy="20" r="1" fill="#ffcc66" opacity="0.8">
+                        <animate attributeName="cy" values="20;5;20" dur="3s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.8;0;0.8" dur="3s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="42" cy="25" r="1" fill="#ffcc66" opacity="0.8">
+                        <animate attributeName="cy" values="25;8;25" dur="3.5s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.8;0;0.8" dur="3.5s" repeatCount="indefinite"/>
+                    </circle>
                 </svg>
             </div>
             <h1>⚔️ Enshrouded Server Configuration ⚔️</h1>
             <p class="subtitle">Customize your dedicated server settings</p>
             <div class="torch torch-right" aria-hidden="true">
-                <svg viewBox="0 0 64 120" width="64" height="120" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 80 140" width="80" height="140" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                        <linearGradient id="flameGradR" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#ffd166"/>
-                            <stop offset="60%" stop-color="#ff8c1a"/>
-                            <stop offset="100%" stop-color="#e25822"/>
+                        <!-- Flame gradients -->
+                        <radialGradient id="flameGradR" cx="50%" cy="40%">
+                            <stop offset="0%" stop-color="#fff9e6"/>
+                            <stop offset="20%" stop-color="#ffe066"/>
+                            <stop offset="50%" stop-color="#ff9933"/>
+                            <stop offset="80%" stop-color="#ff6600"/>
+                            <stop offset="100%" stop-color="#cc3300"/>
+                        </radialGradient>
+                        <radialGradient id="flameGlowGradR" cx="50%" cy="50%">
+                            <stop offset="0%" stop-color="#ffcc66" stop-opacity="0.8"/>
+                            <stop offset="50%" stop-color="#ff6600" stop-opacity="0.4"/>
+                            <stop offset="100%" stop-color="#ff3300" stop-opacity="0"/>
+                        </radialGradient>
+                        <!-- Wood grain gradient -->
+                        <linearGradient id="woodGradR" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stop-color="#5a4332"/>
+                            <stop offset="40%" stop-color="#6e543e"/>
+                            <stop offset="60%" stop-color="#5a4332"/>
+                            <stop offset="100%" stop-color="#4a3525"/>
+                        </linearGradient>
+                        <!-- Metal gradient -->
+                        <linearGradient id="metalGradR" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stop-color="#3d3028"/>
+                            <stop offset="50%" stop-color="#5a4a38"/>
+                            <stop offset="100%" stop-color="#3d3028"/>
                         </linearGradient>
                     </defs>
-                    <rect x="28" y="60" width="8" height="50" fill="#5a4a38" stroke="#3d3028"/>
-                    <rect x="18" y="56" width="28" height="6" rx="3" fill="#3d3028" stroke="#5a4a38"/>
-                    <path class="flame-secondary" d="M32 14 C26 26, 22 30, 25 40 C28 50, 36 50, 39 40 C42 30, 38 26, 32 14 Z" fill="url(#flameGradR)"/>
-                    <path class="flame-primary" d="M32 8 C24 22, 20 28, 24 40 C28 54, 36 54, 40 40 C44 28, 40 22, 32 8 Z" fill="url(#flameGradR)"/>
+
+                    <!-- Torch handle (wood stick) -->
+                    <rect x="35" y="70" width="10" height="60" rx="2" fill="url(#woodGradR)" stroke="#3d3028" stroke-width="0.5"/>
+                    <ellipse cx="40" cy="70" rx="5" ry="2" fill="#4a3525"/>
+
+                    <!-- Metal holder -->
+                    <path d="M 25 65 Q 22 68, 25 70 L 30 72 L 30 80 L 25 82 Q 22 84, 25 87 L 55 87 Q 58 84, 55 82 L 50 80 L 50 72 L 55 70 Q 58 68, 55 65 Z"
+                          fill="url(#metalGradR)" stroke="#2a211a" stroke-width="0.8"/>
+                    <ellipse cx="40" cy="65" rx="15" ry="4" fill="#5a4a38" opacity="0.7"/>
+
+                    <!-- Flame glow (largest, most blurred) -->
+                    <ellipse class="flame-glow" cx="40" cy="35" rx="28" ry="38" fill="url(#flameGlowGradR)"/>
+
+                    <!-- Outer flame (secondary) -->
+                    <path class="flame-secondary"
+                          d="M 40 10 C 32 20, 28 28, 28 38 C 28 48, 30 55, 35 60 C 37 62, 40 63, 40 63 C 40 63, 43 62, 45 60 C 50 55, 52 48, 52 38 C 52 28, 48 20, 40 10 Z"
+                          fill="url(#flameGradR)" opacity="0.85"/>
+
+                    <!-- Inner flame (primary, brighter) -->
+                    <path class="flame-primary"
+                          d="M 40 15 C 35 24, 33 30, 33 38 C 33 45, 35 50, 38 55 C 39 56, 40 57, 40 57 C 40 57, 41 56, 42 55 C 45 50, 47 45, 47 38 C 47 30, 45 24, 40 15 Z"
+                          fill="url(#flameGradR)"/>
+
+                    <!-- Hot center -->
+                    <path class="flame-primary"
+                          d="M 40 25 C 38 30, 37 35, 37 40 C 37 44, 38 47, 40 50 C 42 47, 43 44, 43 40 C 43 35, 42 30, 40 25 Z"
+                          fill="#fff9e6" opacity="0.9"/>
+
+                    <!-- Embers rising from flame -->
+                    <circle cx="38" cy="20" r="1" fill="#ffcc66" opacity="0.8">
+                        <animate attributeName="cy" values="20;5;20" dur="3s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.8;0;0.8" dur="3s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="42" cy="25" r="1" fill="#ffcc66" opacity="0.8">
+                        <animate attributeName="cy" values="25;8;25" dur="3.5s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.8;0;0.8" dur="3.5s" repeatCount="indefinite"/>
+                    </circle>
                 </svg>
             </div>
         </header>
@@ -1135,7 +1632,7 @@
             event.target.classList.add('active');
         }
 
-        // Update slider value display
+        // Update slider value display with animation
         function updateSliderValue(id, suffix = '', divisor = 1) {
             const slider = document.getElementById(id);
             const valueDisplay = document.getElementById(id + '-value');
@@ -1145,11 +1642,21 @@
                 value = value / divisor;
             }
 
+            // Add animation class
+            valueDisplay.classList.add('updating');
+            setTimeout(() => valueDisplay.classList.remove('updating'), 300);
+
             if (suffix === '%') {
                 valueDisplay.textContent = Math.round(value * 100) + suffix;
             } else {
                 valueDisplay.textContent = value + suffix;
             }
+
+            // Update slider progress gradient
+            const min = parseFloat(slider.min);
+            const max = parseFloat(slider.max);
+            const percentage = ((slider.value - min) / (max - min)) * 100;
+            slider.style.setProperty('--range-progress', percentage + '%');
         }
 
         // Handle preset change
@@ -1218,9 +1725,93 @@
                 loadConfigToUI();
                 showNotification('Configuration loaded from enshrouded_server.json');
             } catch (error) {
-                // Silently fail if file doesn't exist - user can load manually
-                console.log('No default config file found, starting with empty config');
+                // No config file found - load defaults
+                console.log('No config file found, loading default values');
+                loadDefaultConfig();
             }
+        }
+
+        // Load default configuration on first load
+        function loadDefaultConfig() {
+            config = {
+                name: 'Enshrouded Server',
+                saveDirectory: './savegame',
+                logDirectory: './logs',
+                ip: '0.0.0.0',
+                queryPort: 15637,
+                slotCount: 16,
+                voiceChatMode: 'Proximity',
+                enableVoiceChat: false,
+                enableTextChat: false,
+                gameSettingsPreset: 'Default',
+                gameSettings: {
+                    playerHealthFactor: 1,
+                    playerManaFactor: 1,
+                    playerStaminaFactor: 1,
+                    playerBodyHeatFactor: 1,
+                    enableDurability: true,
+                    enableStarvingDebuff: false,
+                    foodBuffDurationFactor: 1,
+                    fromHungerToStarving: 600000000000,
+                    shroudTimeFactor: 1,
+                    tombstoneMode: 'AddBackpackMaterials',
+                    enableGliderTurbulences: true,
+                    weatherFrequency: 'Normal',
+                    miningDamageFactor: 1,
+                    plantGrowthSpeedFactor: 1,
+                    resourceDropStackAmountFactor: 1,
+                    factoryProductionSpeedFactor: 1,
+                    perkUpgradeRecyclingFactor: 0.5,
+                    perkCostFactor: 1,
+                    experienceCombatFactor: 1,
+                    experienceMiningFactor: 1,
+                    experienceExplorationQuestsFactor: 1,
+                    randomSpawnerAmount: 'Normal',
+                    aggroPoolAmount: 'Normal',
+                    enemyDamageFactor: 1,
+                    enemyHealthFactor: 1,
+                    enemyStaminaFactor: 1,
+                    enemyPerceptionRangeFactor: 1,
+                    bossDamageFactor: 1,
+                    bossHealthFactor: 1,
+                    threatBonus: 1,
+                    pacifyAllEnemies: false,
+                    tamingStartleRepercussion: 'LoseSomeProgress',
+                    dayTimeDuration: 1800000000000,
+                    nightTimeDuration: 720000000000,
+                    curseModifier: 'Normal'
+                },
+                userGroups: [
+                    {
+                        name: 'Admin',
+                        password: 'AdminXXXXXXXX',
+                        canKickBan: true,
+                        canAccessInventories: true,
+                        canEditBase: true,
+                        canExtendBase: true,
+                        reservedSlots: 0
+                    },
+                    {
+                        name: 'Friend',
+                        password: 'FriendXXXXXXXX',
+                        canKickBan: false,
+                        canAccessInventories: true,
+                        canEditBase: true,
+                        canExtendBase: false,
+                        reservedSlots: 0
+                    },
+                    {
+                        name: 'Guest',
+                        password: 'GuestXXXXXXXX',
+                        canKickBan: false,
+                        canAccessInventories: false,
+                        canEditBase: false,
+                        canExtendBase: false,
+                        reservedSlots: 0
+                    }
+                ]
+            };
+            loadConfigToUI();
         }
 
         // Load config data into UI
@@ -1536,18 +2127,115 @@
             }
         }
 
-        // Show notification
+        // Show notification with enhanced animation
         function showNotification(message) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
+            notification.classList.remove('hide');
             notification.classList.add('show');
             setTimeout(() => {
                 notification.classList.remove('show');
+                notification.classList.add('hide');
             }, 3000);
         }
 
+        // Initialize animated particles
+        function initParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                // Random horizontal position
+                particle.style.left = Math.random() * 100 + '%';
+
+                // Random animation delay
+                particle.style.animationDelay = Math.random() * 8 + 's';
+
+                // Random animation duration
+                particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+
+                // Random size variation
+                const size = 2 + Math.random() * 3;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize smoke particles from torches
+        function initTorchSmoke() {
+            const smokeContainer = document.getElementById('torchSmoke');
+            if (!smokeContainer) return;
+
+            function createSmokeParticle(isLeft) {
+                const smoke = document.createElement('div');
+                smoke.className = 'smoke-particle';
+
+                // Position based on torch location
+                // Torches are positioned at left: -20px and right: -20px relative to header
+                const baseX = isLeft ? 40 : smokeContainer.offsetWidth - 40;
+                const baseY = 20; // Near top of torch flame
+
+                smoke.style.left = baseX + (Math.random() * 15 - 7.5) + 'px';
+                smoke.style.top = baseY + (Math.random() * 10) + 'px';
+
+                // Random animation duration and direction
+                const duration = 4 + Math.random() * 2;
+                const direction = isLeft ? 1 : -1;
+                smoke.style.animation = `smokeRise ${duration}s ease-out forwards`;
+
+                // Add some horizontal drift variation
+                smoke.style.setProperty('--drift-direction', direction);
+
+                smokeContainer.appendChild(smoke);
+
+                // Remove after animation
+                setTimeout(() => {
+                    if (smoke.parentNode) {
+                        smoke.remove();
+                    }
+                }, duration * 1000 + 100);
+            }
+
+            // Create smoke particles periodically
+            setInterval(() => {
+                createSmokeParticle(true); // Left torch
+            }, 600);
+
+            setInterval(() => {
+                createSmokeParticle(false); // Right torch
+            }, 700);
+
+            // Create initial burst
+            setTimeout(() => {
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => createSmokeParticle(true), i * 200);
+                    setTimeout(() => createSmokeParticle(false), i * 200);
+                }
+            }, 500);
+        }
+
+        // Initialize slider progress on page load
+        function initSliders() {
+            document.querySelectorAll('input[type="range"]').forEach(slider => {
+                const min = parseFloat(slider.min);
+                const max = parseFloat(slider.max);
+                const percentage = ((slider.value - min) / (max - min)) * 100;
+                slider.style.setProperty('--range-progress', percentage + '%');
+            });
+        }
+
         // Load config on page load
-        window.addEventListener('load', loadConfig);
+        window.addEventListener('load', () => {
+            loadConfig();
+            initParticles();
+            initTorchSmoke();
+            initSliders();
+        });
     </script>
 </body>
 </html>
