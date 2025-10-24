@@ -1131,11 +1131,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="playerBodyHeatFactor">Body Heat (50% - 200%) <span class="help" data-tooltip="Scales resistance to cold. Higher = longer before hypothermia in cold areas.">?</span></label>
+                        <label for="playerBodyHeatFactor">Body Heat (0% - 200%) <span class="help" data-tooltip="Scales resistance to cold. Higher = longer before hypothermia in cold areas.">?</span></label>
                         <p class="label-description">Resistance to cold weather</p>
                         <div class="slider-container">
                             <div class="slider-wrapper">
-                                <input type="range" id="playerBodyHeatFactor" min="0.5" max="2" step="0.1" value="1" oninput="updateSliderValue('playerBodyHeatFactor', '%')">
+                                <input type="range" id="playerBodyHeatFactor" min="0" max="2" step="0.1" value="1" oninput="updateSliderValue('playerBodyHeatFactor', '%')">
                                 <span class="slider-value" id="playerBodyHeatFactor-value">100%</span>
                             </div>
                         </div>
@@ -1701,7 +1701,7 @@
                 },
                 'Relaxed': {
                     playerHealthFactor: 2, playerManaFactor: 1, playerStaminaFactor: 1,
-                    playerBodyHeatFactor: 1, enableDurability: true, enableStarvingDebuff: false,
+                    playerBodyHeatFactor: 1.2, enableDurability: true, enableStarvingDebuff: false,
                     foodBuffDurationFactor: 1, fromHungerToStarving: 600000000000,
                     shroudTimeFactor: 1, tombstoneMode: 'AddBackpackMaterials',
                     enableGliderTurbulences: true, weatherFrequency: 'Normal',
@@ -1755,7 +1755,7 @@
                 },
                 'Creative': {
                     playerHealthFactor: 4, playerManaFactor: 4, playerStaminaFactor: 4,
-                    playerBodyHeatFactor: 2, enableDurability: false, enableStarvingDebuff: false,
+                    playerBodyHeatFactor: 0, enableDurability: false, enableStarvingDebuff: false,
                     foodBuffDurationFactor: 2, fromHungerToStarving: 600000000000,
                     shroudTimeFactor: 4, tombstoneMode: 'NoTombstone',
                     enableGliderTurbulences: false, weatherFrequency: 'Rare',
