@@ -29,6 +29,10 @@ No more manual JSON editing. No more syntax errors. Just pure server management.
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg)](LICENSE)
 [![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F-orange)](https://github.com)
 
+## 🖼️ UI Preview
+
+![First tab preview](assets/Screenshot%202025-10-23%20191610.png)
+
 </div>
 
 ---
