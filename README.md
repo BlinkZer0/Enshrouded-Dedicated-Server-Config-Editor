@@ -1,3 +1,5 @@
+**STOP; this is hosted here -> https://enshrouded-dedicated-server-config-editor.tiiny.site/**
+
 <p align="center">
   <img src="https://img.shields.io/badge/⚔️_ENSHROUDED-Server_Config_Editor-d4af37?style=for-the-badge&labelColor=2a211a" alt="Enshrouded Server Config Editor">
 </p>
