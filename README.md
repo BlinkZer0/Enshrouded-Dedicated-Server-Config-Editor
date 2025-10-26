@@ -1,4 +1,4 @@
-**STOP; this is hosted here -> https://enshrouded-dedicated-server-config-editor.tiiny.site/**
+**STOP; this is hosted here -> [GitHub Pages](https://blinkzer0.github.io/Enshrouded-Dedicated-Server-Config-Editor/Enshrouded-Dedicated-Server-Config-Editor.html)**
 
 <p align="center">
   <img src="https://img.shields.io/badge/⚔️_ENSHROUDED-Server_Config_Editor-d4af37?style=for-the-badge&labelColor=2a211a" alt="Enshrouded Server Config Editor">
