@@ -32,8 +32,7 @@ ADDITIONAL RESTRICTIONS (These terms OVERRIDE conflicting GPL v3.0 terms)
 
    a) Keen Games GmbH and all affiliated entities
    b) Any parent companies, subsidiaries, or affiliates of Keen Games GmbH
-   c) Any employees, contractors, or agents of Keen Games GmbH acting on
-      behalf of the company
+   c) Any employees, contractors, or agents of Keen Games
    d) Any entity that acquires, merges with, or succeeds Keen Games GmbH
 
 4. PROHIBITION ON SIMILAR FUNCTIONALITY APPLICATIONS
