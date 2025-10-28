@@ -29,6 +29,7 @@ A beautiful, browser-based configuration editor for Enshrouded dedicated servers
 No more manual JSON editing. No more syntax errors. Just pure server management.
 
 [![License: Custom Restrictive](https://img.shields.io/badge/License-Custom_Restrictive-red.svg)](LICENSE)
+Keen kindly removed our suggestion on official channels to utilize this tool or something like it, so we removed the ability for them to do so entirely. We are pragmatic. We will not be treated with digital gaslighting after such effort and denial of gift.
 [![Personal Use Only](https://img.shields.io/badge/Use-Personal_Only-orange.svg)](LICENSE)
 [![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F-orange)](https://github.com)
 
