@@ -28,9 +28,7 @@
 A beautiful, browser-based configuration editor for Enshrouded dedicated servers.
 No more manual JSON editing. No more syntax errors. Just pure server management.
 
-[![License: Custom Restrictive](https://img.shields.io/badge/License-Custom_Restrictive-red.svg)](LICENSE)
-Keen kindly removed our suggestion on official channels to utilize this tool or something like it, so we removed the ability for them to do so entirely. We are pragmatic. We will not be treated with digital gaslighting after such effort and denial of gift.
-[![Personal Use Only](https://img.shields.io/badge/Use-Personal_Only-orange.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg)](LICENSE)
 [![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F-orange)](https://github.com)
 
 ## 🖼️ UI Preview
@@ -279,7 +277,7 @@ Enshrouded-Dedicated-Server-Config-Editor/
 ├── Enshrouded-Dedicated-Server-Config-Editor.html  # Main application (all-in-one file)
 ├── enshrouded_server_readme.txt                    # Official documentation
 ├── README.md                                       # This file
-└── LICENSE                                         # Custom Restrictive License
+└── LICENSE                                         # MIT License
 ```
 
 ### Key Features of the Code
@@ -295,7 +293,7 @@ Enshrouded-Dedicated-Server-Config-Editor/
 
 ## 🤝 Contributing
 
-**Personal, non-commercial contributions are welcome!** By contributing, you agree that your contributions will be licensed under the same restrictive license.
+Contributions are welcome! Here's how you can help:
 
 ### Reporting Issues
 - Check the config file generated matches expected format
@@ -303,13 +301,11 @@ Enshrouded-Dedicated-Server-Config-Editor/
 - Suggest new features or improvements
 
 ### Submitting Changes
-1. Fork the repository for personal use
+1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-**Note:** All contributions must comply with the license restrictions. Competitive forks or commercial derivatives are not permitted.
 
 ### Areas for Enhancement
 - Add import/export for specific sections
@@ -323,32 +319,15 @@ Enshrouded-Dedicated-Server-Config-Editor/
 
 ## 📄 License
 
-This project is licensed under a **Custom Restrictive License** based on GPL v3.0 with additional restrictions - see the [LICENSE](LICENSE) file for full details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-### ⚠️ Important License Terms
-
-**PERSONAL USE ONLY** - This software is licensed for personal, non-commercial use only.
-
-### What You CAN Do
-- ✅ Use for personal server hosting
-- ✅ Modify for your own personal use
-- ✅ Fork for learning or contributing back to this project
-- ✅ Share the official repository link
-
-### What You CANNOT Do
-- ❌ Use commercially or redistribute for commercial purposes
-- ❌ Create competing server config editors for any game
-- ❌ Include in commercial software or services
-- ❌ Remove or modify the license terms
-- ❌ Create forks that compete with this project's functionality
-
-### Specific Restrictions
-- **Keen Games GmbH** and all affiliates are explicitly prohibited from using, redistributing, or creating derivative works
-- The concept and implementation of game server configuration editors of this type are protected
-- Similar functionality applications for other games require explicit written permission
-
-### Requesting Permissions
-To request permission for commercial use or exceptions to these restrictions, please contact the copyright holders through the official repository.
+### What This Means
+- ✅ Use commercially
+- ✅ Modify freely
+- ✅ Distribute
+- ✅ Private use
+- ⚠️ Provide attribution
+- ⚠️ Include license copy
 
 ---
 
